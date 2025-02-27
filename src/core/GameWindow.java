@@ -1,17 +1,24 @@
 package core;
 
 import javax.swing.JFrame;
+import java.awt.Dimension;
 
 public class GameWindow {
-    private GamePanel gamePanel;
     private JFrame jFrame;
-    public GameWindow() {
+    
+    public GameWindow(GamePanel gamePanel) {
         jFrame = new JFrame("Game");
-        gamePanel = new GamePanel();
-        jFrame.add(gamePanel);
-        jFrame.setSize(500,500);
+        
+        // Set the size of the JFrame according to the preferred size
+        jFrame.setPreferredSize(new Dimension(800, 600));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setResizable(false);
+        
+        // Add the game panel
+        jFrame.add(gamePanel);
+        jFrame.pack(); // Pack the frame to get proper sizing
+        
+        jFrame.setLocationRelativeTo(null); // Center on screen
         jFrame.setVisible(true);
     }
 }
