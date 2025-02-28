@@ -1,4 +1,5 @@
 package inputs;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import core.GamePanel;
@@ -24,16 +25,13 @@ public class KeyBoardsHandle implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (PLAYER == 1) {
             if (e.getKeyCode() == KeyEvent.VK_W) {
-
             }
             if (e.getKeyCode() == KeyEvent.VK_S) {
-
             }
         } else if (PLAYER == 2) {
             if (e.getKeyCode() == KeyEvent.VK_UP) {
             }
             if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-
             }
         }
     }
