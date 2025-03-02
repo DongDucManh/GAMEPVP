@@ -2,19 +2,24 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.*;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import graphics.Sprite;
 
 /**
  * Attack - đại diện cho một viên đạn trong game
  * Quản lý vị trí, di chuyển và vẽ đạn
  */
 public class Attack {
-    private int speed = 10;           // Tốc độ di chuyển đạn
+    private int speed = 5;           // Tốc độ di chuyển đạn
     private int x, y;                 // Vị trí đạn
-    private int width = 10, height = 5; // Kích thước đạn
+    private int width = 10, height = 10; // Kích thước đạn
     private boolean active = true;    // Trạng thái hoạt động
     private int direction;            // Hướng di chuyển
     private Color color;              // Màu sắc (theo người chơi)
+    private Sprite sprite;            // Tham chiếu đến đối tượng Sprite
+    private BufferedImage bulletImage; // Hình ảnh đạn đã xoay theo hướng
     
     /**
      * Khởi tạo đạn
@@ -22,12 +27,17 @@ public class Attack {
      * @param y Tọa độ Y ban đầu
      * @param direction Hướng di chuyển (0:lên, 1:xuống, 2:trái, 3:phải)
      * @param color Màu sắc đạn
+     * @param sprite Đối tượng Sprite để lấy hình ảnh
      */
-    public Attack(int x, int y, int direction, Color color) {
+    public Attack(int x, int y, int direction, Color color, Sprite sprite) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.color = color;
+        this.sprite = sprite;
+        
+        // Lấy và xoay hình ảnh đạn theo hướng
+        this.bulletImage = sprite.rotateImage(sprite.getBullet(), direction);
     }
     
     /**
@@ -65,13 +75,17 @@ public class Attack {
     public void draw(Graphics g) {
         if (!active) return;  // Không vẽ nếu đạn không còn hoạt động
         
-        g.setColor(color);
-        
-        // Vẽ hình dạng đạn khác nhau tùy theo hướng
-        if (direction == 0 || direction == 1) { // Đạn dọc (lên/xuống)
-            g.fillRect(x, y, 5, 10);
-        } else { // Đạn ngang (trái/phải)
-            g.fillRect(x, y, 10, 5);
+        // Vẽ đạn bằng hình ảnh sprite
+        if (bulletImage != null) {
+            g.drawImage(bulletImage, x, y, width, height, null);
+        } else {
+            // Vẽ đạn đơn giản nếu không có hình ảnh
+            g.setColor(color);
+            if (direction == 0 || direction == 1) { // Đạn dọc (lên/xuống)
+                g.fillRect(x, y, 5, 10);
+            } else { // Đạn ngang (trái/phải)
+                g.fillRect(x, y, 10, 5);
+            }
         }
     }
     

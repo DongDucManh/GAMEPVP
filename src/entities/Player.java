@@ -3,9 +3,11 @@ package entities;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Polygon;
+import java.awt.image.BufferedImage;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import graphics.Sprite;
 
 /**
  * Player - đại diện cho một người chơi trong game
@@ -18,10 +20,12 @@ public class Player {
     private int moveDirection = -1;        // Hướng di chuyển (-1: không di chuyển)
     private int facingDirection = 3;       // Hướng nhìn (mặc định: phải)
     private Color color;                   // Màu sắc người chơi
-    private String label;                  // Nhãn hiển thị (P1/P2)
+    // private String label;                  // Nhãn hiển thị (P1/P2)
     private List<Attack> bullets;          // Danh sách đạn đã bắn
     private long lastShootTime;            // Thời gian bắn đạn cuối cùng
     private static final long SHOOT_COOLDOWN = 500; // Thời gian hồi chiêu (ms)
+    private boolean isBlue; // Xác định màu xe tăng (true: xanh, false: đỏ)
+    private Sprite sprite;  // Tham chiếu đến đối tượng Sprite
 
     /**
      * Khởi tạo người chơi
@@ -31,16 +35,21 @@ public class Player {
      * @param size Kích thước người chơi
      * @param color Màu sắc
      * @param label Nhãn hiển thị (P1/P2)
+     * @param sprite Đối tượng Sprite để lấy hình ảnh
      */
-    public Player(int x, int y, int speed, int size, Color color, String label) {
+    public Player(int x, int y, int speed, int size, Color color, String label, Sprite sprite) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.size = size;
         this.color = color;
-        this.label = label;
+        //this.label = label;
         this.bullets = new ArrayList<>();
         this.lastShootTime = 0;
+        this.sprite = sprite;
+        
+        // Xác định xe tăng là màu xanh hay đỏ dựa theo label
+        this.isBlue = label.equals("P1");
     }
 
     /**
@@ -79,7 +88,7 @@ public class Player {
             return;
 
         // Tăng tốc độ di chuyển để mượt hơn
-        int actualSpeed = speed * 3;
+        int actualSpeed = speed;
 
         // Di chuyển theo hướng
         switch (moveDirection) {
@@ -134,29 +143,31 @@ public class Player {
         // Điều chỉnh vị trí bắt đầu của đạn dựa trên hướng nhìn của người chơi
         switch (facingDirection) {
             case 0: // Lên
-                bulletX += size / 2 - 2;
+                bulletX += size / 2 - 8;
+                bulletY -= 16;
                 break;
             case 1: // Xuống
-                bulletX += size / 2 - 2;
+                bulletX += size / 2 - 8;
                 bulletY += size;
                 break;
             case 2: // Trái
-                bulletY += size / 2 - 2;
+                bulletX -= 16;
+                bulletY += size / 2 - 8;
                 break;
             case 3: // Phải
                 bulletX += size;
-                bulletY += size / 2 - 2;
+                bulletY += size / 2 - 8;
                 break;
             default:
                 // Nếu không có hướng, mặc định bắn sang phải
                 bulletX += size;
-                bulletY += size / 2 - 2;
+                bulletY += size / 2 - 8;
                 facingDirection = 3;
                 break;
         }
         
         // Tạo đạn và đặt thời gian hồi chiêu
-        bullets.add(new Attack(bulletX, bulletY, facingDirection, color));
+        bullets.add(new Attack(bulletX, bulletY, facingDirection, color, sprite));
         lastShootTime = currentTime;
     }
     
@@ -200,43 +211,55 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
-        // Vẽ hình vuông người chơi
-        g.setColor(color);
-        g.fillRect(x, y, size, size);
-        
-        // Vẽ chỉ báo hướng nhìn
-        g.setColor(Color.YELLOW);
-        
-        // Vẽ chỉ báo tam giác thể hiện hướng nhìn của người chơi
-        Polygon indicator = new Polygon();
-        switch (facingDirection) {
-            case 0: // Lên
-                indicator.addPoint(x + size/2, y - 5);
-                indicator.addPoint(x + size/2 - 5, y);
-                indicator.addPoint(x + size/2 + 5, y);
-                break;
-            case 1: // Xuống
-                indicator.addPoint(x + size/2, y + size + 5);
-                indicator.addPoint(x + size/2 - 5, y + size);
-                indicator.addPoint(x + size/2 + 5, y + size);
-                break;
-            case 2: // Trái
-                indicator.addPoint(x - 5, y + size/2);
-                indicator.addPoint(x, y + size/2 - 5);
-                indicator.addPoint(x, y + size/2 + 5);
-                break;
-            case 3: // Phải
-                indicator.addPoint(x + size + 5, y + size/2);
-                indicator.addPoint(x + size, y + size/2 - 5);
-                indicator.addPoint(x + size, y + size/2 + 5);
-                break;
-        }
-        g.fillPolygon(indicator);
+        if (sprite != null) {
+            // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
+            BufferedImage tankImg = sprite.getTank(isBlue);
+            BufferedImage rotatedTank = sprite.rotateImage(tankImg, facingDirection);
+            
+            // Vẽ xe tăng
+            g.drawImage(rotatedTank, x, y, size, size, null);
+        } //else {
+            // Vẽ hình vuông người chơi nếu không có sprite
+           // g.setColor(color);
+            //g.fillRect(x, y, size, size);
+            
+            // // Vẽ chỉ báo hướng nhìn
+            // g.setColor(Color.YELLOW);
+            
+            // // Vẽ chỉ báo tam giác thể hiện hướng nhìn của người chơi
+            // int[] xPoints = new int[3];
+            // int[] yPoints = new int[3];
+            
+            // switch (facingDirection) {
+            //     case 0: // Lên
+            //         xPoints[0] = x + size/2;     yPoints[0] = y - 5;
+            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y;
+            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y;
+            //         break;
+            //     case 1: // Xuống
+            //         xPoints[0] = x + size/2;     yPoints[0] = y + size + 5;
+            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y + size;
+            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y + size;
+            //         break;
+            //     case 2: // Trái
+            //         xPoints[0] = x - 5;          yPoints[0] = y + size/2;
+            //         xPoints[1] = x;              yPoints[1] = y + size/2 - 5;
+            //         xPoints[2] = x;              yPoints[2] = y + size/2 + 5;
+            //         break;
+            //     case 3: // Phải
+            //         xPoints[0] = x + size + 5;   yPoints[0] = y + size/2;
+            //         xPoints[1] = x + size;       yPoints[1] = y + size/2 - 5;
+            //         xPoints[2] = x + size;       yPoints[2] = y + size/2 + 5;
+            //         break;
+          //  }
+            
+            //g.fillPolygon(xPoints, yPoints, 3);
+       // }
 
         // Vẽ nhãn người chơi phía trên
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString(label, x + (size / 2) - 10, y - 10);
+        //g.setColor(Color.WHITE);
+        //g.setFont(new Font("Arial", Font.BOLD, 14));
+        //g.drawString(label, x + (size / 2) - 10, y - 10);
     }
     
     /**

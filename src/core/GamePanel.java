@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import entities.Player;
 import entities.Attack;
 import inputs.KeyBoardsHandle;
+import graphics.Sprite;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,14 +17,18 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private Player player_1, player_2;     // Hai người chơi trong game
     private KeyBoardsHandle keyBoardsHandle;  // Xử lý đầu vào từ bàn phím
+    private Sprite sprite;                 // Quản lý hình ảnh sprite
     
     /**
      * Khởi tạo panel game và các thành phần cần thiết
      */
     public GamePanel() {
+        // Khởi tạo sprite
+        sprite = new Sprite();
+        
         // Tạo người chơi với các thông số và nhãn
-        player_1 = new Player(100, 100, 1, 30, Color.BLUE, "P1");
-        player_2 = new Player(600, 400, 1, 30, Color.RED, "P2");
+        player_1 = new Player(100, 100, 1, 32, Color.BLUE, "P1", sprite);
+        player_2 = new Player(600, 400, 1, 32, Color.RED, "P2", sprite);
         
         // Thiết lập xử lý đầu vào
         keyBoardsHandle = new KeyBoardsHandle(this);
