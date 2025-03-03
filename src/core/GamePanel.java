@@ -1,12 +1,17 @@
 package core;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import entities.Player;
 import entities.Attack;
 import inputs.KeyBoardsHandle;
+import tile.TileManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +21,9 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private Player player_1, player_2;     // Hai người chơi trong game
     private KeyBoardsHandle keyBoardsHandle;  // Xử lý đầu vào từ bàn phím
+    
+
+    TileManager tileM = new TileManager(this);
     
     /**
      * Khởi tạo panel game và các thành phần cần thiết
@@ -137,6 +145,9 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        
+        tileM.draw(g2);
         
         // Vẽ người chơi
         player_1.draw(g);
@@ -148,6 +159,7 @@ public class GamePanel extends JPanel {
         
         // Vẽ hướng dẫn
         drawInstructions(g);
+        g2.dispose();
     }
     
     /**

@@ -18,7 +18,7 @@ public class GameWindow {
         jFrame = new JFrame("Game");  // Tạo cửa sổ với tiêu đề "Game"
         
         // Thiết lập kích thước cửa sổ
-        jFrame.setPreferredSize(new Dimension(800, 600));
+        jFrame.setPreferredSize(new Dimension(1440, 800));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Thoát chương trình khi đóng cửa sổ
         jFrame.setResizable(false);  // Không cho phép thay đổi kích thước
         

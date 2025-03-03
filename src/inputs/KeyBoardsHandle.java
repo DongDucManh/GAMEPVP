@@ -63,7 +63,7 @@ public class KeyBoardsHandle implements KeyListener {
     public boolean isShootingP1() {
         return shootP1;
     }
-    
+
     /**
      * Kiểm tra xem người chơi 2 có đang bắn không
      * @return true nếu người chơi 2 đang bắn, ngược lại false
