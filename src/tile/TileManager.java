@@ -1,7 +1,9 @@
 package tile;
 
 import java.awt.Graphics2D;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -25,13 +27,25 @@ public class TileManager {
     }
 
     public void getTileImage() {
-        try {
-            for(int i=0; i<GameConstants.GAME_SCREEN_WIDTH; i+=32) {
-                for(int j=0; j<GameConstants.GAME_SCREEN_HEIGHT; j+=32) {
-                    tile[i][j] = new Tile();
-                    tile[i][j].image = ImageIO.read(new File("images/tiles/land.png")); 
+        String file = "map.txt";
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = new String();
+            for(int i=0; i<GameConstants.GAME_SCREEN_WIDTH/32; i++) {
+                line = br.readLine();
+                String[] row = new String[line.length()];
+                for (int k=0; k<row.length; k++) row[k] = new String();
+                for(int j=0; j<GameConstants.GAME_SCREEN_HEIGHT/32; j++) {
+                    if(row[j].equals('0')) {
+                        tile[i][j] = new Tile();
+                        tile[i][j].image = ImageIO.read(new File("images/tiles/land.png")); 
+                    } else {
+                        tile[i][j] = new Tile();
+                        tile[i][j].image = ImageIO.read(new File("images/tiles/brick32x32.png")); 
+                    }
+                    
                 }
             }
+
             // tile[0].image = ImageIO.read(new File("images/tiles/brick32x32.png"));
         } catch (IOException e) {
             e.printStackTrace();
