@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import core.GameConstants;
 import graphics.Sprite;
 
 /**
@@ -12,7 +14,7 @@ import graphics.Sprite;
  * Quản lý vị trí, di chuyển và vẽ đạn
  */
 public class Attack {
-    private int speed = 5;           // Tốc độ di chuyển đạn
+    private int speed = 2;           // Tốc độ di chuyển đạn
     private int x, y;                 // Vị trí đạn
     private int width = 10, height = 10; // Kích thước đạn
     private boolean active = true;    // Trạng thái hoạt động
@@ -63,7 +65,7 @@ public class Attack {
         }
         
         // Kiểm tra nếu đạn đi ra ngoài màn hình
-        if (x < 0 || x > 800 || y < 0 || y > 600) {
+        if (x < 0 || x > GameConstants.GAME_SCREEN_WIDTH || y < 0 || y > GameConstants.GAME_SCREEN_HEIGHT) {
             active = false;  // Đánh dấu không hoạt động
         }
     }

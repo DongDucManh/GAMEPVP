@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+
+import core.GameConstants;
 import graphics.Sprite;
 
 /**
@@ -96,8 +98,8 @@ public class Player {
                 y -= actualSpeed;
                 break;
             case 1: // Xuống
-                if (y + actualSpeed > 600) {
-                    y += (y + actualSpeed) - 600;
+                if (y + actualSpeed > GameConstants.GAME_SCREEN_HEIGHT) {
+                    y += (y + actualSpeed) - GameConstants.GAME_SCREEN_HEIGHT;
                 } else {
                     y += actualSpeed;
                 }
@@ -106,8 +108,8 @@ public class Player {
                 x -= actualSpeed;
                 break;
             case 3: // Phải
-                if (x + actualSpeed > 800) {
-                    x += (x + actualSpeed) - 800;
+                if (x + actualSpeed > GameConstants.GAME_SCREEN_WIDTH) {
+                    x += (x + actualSpeed) - GameConstants.GAME_SCREEN_WIDTH;
                 } else {
                     x += actualSpeed;
                 }
@@ -119,10 +121,10 @@ public class Player {
             x = 0;
         if (y < 0)
             y = 0;
-        if (x > 800 - size)
-            x = 800 - size - size / 2;
-        if (y > 600 - size)
-            y = 600 - size - size;
+        if (x > GameConstants.GAME_SCREEN_WIDTH - size)
+            x = GameConstants.GAME_SCREEN_WIDTH - size - size / 2;
+        if (y > GameConstants.GAME_SCREEN_HEIGHT - size)
+            y = GameConstants.GAME_SCREEN_HEIGHT - size - size;
     }
 
     /**
