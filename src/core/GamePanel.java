@@ -35,8 +35,8 @@ public class GamePanel extends JPanel {
         sprite = new Sprite();
         
         // Tạo người chơi với các thông số và nhãn
-        player_1 = new Player(100, 100, 1, 32, Color.BLUE, "P1", sprite);
-        player_2 = new Player(600, 400, 1, 32, Color.RED, "P2", sprite);
+        player_1 = new Player(0, GameConstants.GAME_SCREEN_HEIGHT/2, 1, 32, Color.BLUE, "P1", sprite);
+        player_2 = new Player(GameConstants.GAME_SCREEN_WIDTH-GameConstants.TILE_SIZE*2, GameConstants.GAME_SCREEN_HEIGHT/2, 1, 32, Color.RED, "P2", sprite);
         
         // Thiết lập xử lý đầu vào
         keyBoardsHandle = new KeyBoardsHandle(this);
