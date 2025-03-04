@@ -20,7 +20,7 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
-        tile = new Tile[GameConstants.GAME_SCREEN_WIDTH][GameConstants.GAME_SCREEN_HEIGHT];
+        tile = new Tile[GameConstants.GAME_SCREEN_WIDTH/32][GameConstants.GAME_SCREEN_HEIGHT/32];
         // tile = new Tile[10];
 
         getTileImage();
@@ -32,19 +32,21 @@ public class TileManager {
             String line = new String();
             for(int i=0; i<GameConstants.GAME_SCREEN_WIDTH/32; i++) {
                 line = br.readLine();
-                String[] row = new String[line.length()];
-                for (int k=0; k<row.length; k++) row[k] = new String();
+                if (line.equals("end")) {
+                    break;
+                }
                 for(int j=0; j<GameConstants.GAME_SCREEN_HEIGHT/32; j++) {
-                    if(row[j].equals('0')) {
+                    if(line.charAt(j) == '0') {
                         tile[i][j] = new Tile();
                         tile[i][j].image = ImageIO.read(new File("images/tiles/land.png")); 
                     } else {
                         tile[i][j] = new Tile();
                         tile[i][j].image = ImageIO.read(new File("images/tiles/brick32x32.png")); 
                     }
-                    
+                    System.out.println(line.charAt(j));
                 }
             }
+
 
             // tile[0].image = ImageIO.read(new File("images/tiles/brick32x32.png"));
         } catch (IOException e) {
