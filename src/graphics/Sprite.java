@@ -40,83 +40,86 @@ public class Sprite {
     private void tryLoadImages() {
         try {
             // Kiểm tra và tạo thư mục images nếu chưa tồn tại
-            File imageDir = new File("images");
-            if (!imageDir.exists()) {
-                imageDir.mkdir();
-                System.out.println("Đã tạo thư mục images");
-            }
+            // File imageDir = new File("images");
+            // if (!imageDir.exists()) {
+            //     imageDir.mkdir();
+            //     System.out.println("Đã tạo thư mục images");
+            // }
             
             // Thử tải từ nhiều vị trí khác nhau
-            BufferedImage loadedBlue = loadImage("blueTank.png");
-            if (loadedBlue != null) blueTank = loadedBlue;
+            blueTank = ImageIO.read(new File("res/player/BlueTank.png"));
+            redTank = ImageIO.read(new File("res/player/redTank.png"));
+            bullet = ImageIO.read(new File("res/player/bullet.png"));
+
+            // BufferedImage loadedBlue = loadImage("BlueTank.png");
+            // if (loadedBlue != null) blueTank = loadedBlue;
             
-            BufferedImage loadedRed = loadImage("redTank.png");
-            if (loadedRed != null) redTank = loadedRed;
+            // BufferedImage loadedRed = loadImage("redTank.png");
+            // if (loadedRed != null) redTank = loadedRed;
             
-            BufferedImage loadedBullet = loadImage("bullet.png");
-            if (loadedBullet != null) bullet = loadedBullet;
+            // BufferedImage loadedBullet = loadImage("bullet.png");
+            // if (loadedBullet != null) bullet = loadedBullet;
             
-            System.out.println("Tải hình ảnh thành công: " + 
-                              (loadedBlue != null ? "blueTank.png " : "") +
-                              (loadedRed != null ? "redTank.png " : "") +
-                              (loadedBullet != null ? "bullet.png" : ""));
+            // System.out.println("Tải hình ảnh thành công: " + 
+            //                   (loadedBlue != null ? "blueTank.png " : "") +
+            //                   (loadedRed != null ? "redTank.png " : "") +
+            //                   (loadedBullet != null ? "bullet.png" : ""));
             
-            if (loadedBlue == null && loadedRed == null && loadedBullet == null) {
-                System.out.println("Không tìm thấy file hình ảnh, đang sử dụng hình ảnh mặc định");
-                System.out.println("Vui lòng tạo các file hình ảnh trong thư mục: " + imageDir.getAbsolutePath());
-            }
+            // if (loadedBlue == null && loadedRed == null && loadedBullet == null) {
+            //     System.out.println("Không tìm thấy file hình ảnh, đang sử dụng hình ảnh mặc định");
+            //     System.out.println("Vui lòng tạo các file hình ảnh trong thư mục: " + imageDir.getAbsolutePath());
+            // }
             
         } catch (Exception e) {
-            System.out.println("Lỗi khi tải hình ảnh: " + e.getMessage());
-            System.out.println("Đang sử dụng hình ảnh mặc định thay thế");
+            e.printStackTrace();
         }
     }
     
-    /**
-     * Tải một hình ảnh từ thư mục
-     * @param filename Tên file hình ảnh
-     * @return BufferedImage đã tải, hoặc null nếu không tìm thấy
-     */
-    private BufferedImage loadImage(String filename) {
-        BufferedImage img = null;
+    // /**
+    //  * Tải một hình ảnh từ thư mục
+    //  * @param filename Tên file hình ảnh
+    //  * @return BufferedImage đã tải, hoặc null nếu không tìm thấy
+    //  */
+    // private BufferedImage loadImage(String filename) {
+    //     BufferedImage img = null;
         
-        try {
-            // Thử từ thư mục images trong thư mục gốc
-            File file = new File("images/" + filename);
-            if (file.exists()) {
-                System.out.println("Tìm thấy file: " + file.getAbsolutePath());
-                return ImageIO.read(file);
-            }
+    //     try {
+    //         // // Thử từ thư mục images trong thư mục gốc
+    //         // File file = new File("images/" + filename);
+    //         // if (file.exists()) {
+    //         //     System.out.println("Tìm thấy file: " + file.getAbsolutePath());
+    //         //     return ImageIO.read(file);
+    //         // }
             
-            // Thử từ D:/GamePVP/images/
-            file = new File("D:/GamePVP/images/" + filename);
-            if (file.exists()) {
-                System.out.println("Tìm thấy file: " + file.getAbsolutePath());
-                return ImageIO.read(file);
-            }
+    //         // // Thử từ D:/GamePVP/images/
+    //         // file = new File("D:/GamePVP/images/" + filename);
+    //         // if (file.exists()) {
+    //         //     System.out.println("Tìm thấy file: " + file.getAbsolutePath());
+    //         //     return ImageIO.read(file);
+    //         // }
             
-            // Thử từ thư mục hiện tại
-            file = new File(filename);
-            if (file.exists()) {
-                System.out.println("Tìm thấy file: " + file.getAbsolutePath());
-                return ImageIO.read(file);
-            }
+    //         // // Thử từ thư mục hiện tại
+    //         // file = new File(filename);
+    //         // if (file.exists()) {
+    //         //     System.out.println("Tìm thấy file: " + file.getAbsolutePath());
+    //         //     return ImageIO.read(file);
+    //         // }
             
-            // Thử tải từ resources
-            img = ImageIO.read(getClass().getResourceAsStream("/resources/images/" + filename));
-            if (img != null) {
-                System.out.println("Tìm thấy file trong resources: " + filename);
-                return img;
-            }
+    //         // Thử tải từ resources
+    //         img = ImageIO.read(new File("/res/player/" + filename));
+    //         if (img != null) {
+    //             System.out.println("Tìm thấy file trong resources: " + filename);
+    //             return img;
+    //         }
             
-            System.out.println("Không tìm thấy file hình ảnh: " + filename);
+    //         System.out.println("Không tìm thấy file hình ảnh: " + filename);
             
-        } catch (IOException e) {
-            System.out.println("Lỗi đọc file " + filename + ": " + e.getMessage());
-        }
+    //     } catch (IOException e) {
+    //         System.out.println("Lỗi đọc file " + filename + ": " + e.getMessage());
+    //     }
         
-        return null;
-    }
+    //     return null;
+    // }
     
     /**
      * Tạo hình ảnh xe tăng mặc định với màu chỉ định
