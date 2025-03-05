@@ -23,12 +23,14 @@ public class Player {
     private int facingDirection = 3;       // Hướng nhìn (mặc định: phải)
     private Color color;                   // Màu sắc người chơi
     // private String label;                  // Nhãn hiển thị (P1/P2)
-    private List<Attack> bullets;          // Danh sách đạn đã bắn
+    private List<Bullet> bullets;          // Danh sách đạn đã bắn
     private long lastShootTime;            // Thời gian bắn đạn cuối cùng
     private static final long SHOOT_COOLDOWN = 500; // Thời gian hồi chiêu (ms)
     private boolean isBlue; // Xác định màu xe tăng (true: xanh, false: đỏ)
     private Sprite sprite;  // Tham chiếu đến đối tượng Sprite
-
+    private int previousX;
+    private int previousY;
+    private Rectangle hitBox;
     /**
      * Khởi tạo người chơi
      * @param x Tọa độ X ban đầu
@@ -42,6 +44,7 @@ public class Player {
     public Player(int x, int y, int speed, int size, Color color, String label, Sprite sprite) {
         this.x = x;
         this.y = y;
+
         this.speed = speed;
         this.size = size;
         this.color = color;
@@ -52,6 +55,8 @@ public class Player {
         
         // Xác định xe tăng là màu xanh hay đỏ dựa theo label
         this.isBlue = label.equals("P1");
+
+        this.hitBox = new Rectangle(x, y, size, size);
     }
 
     /**
@@ -86,8 +91,10 @@ public class Player {
      */
     public void move() {
         // Chỉ di chuyển nếu có hướng di chuyển
-        if (moveDirection == -1)
-            return;
+        if (moveDirection == -1) return;
+
+        previousX = x;
+        previousY = y;
 
         // Tăng tốc độ di chuyển để mượt hơn
         int actualSpeed = speed;
@@ -121,10 +128,17 @@ public class Player {
             x = 0;
         if (y < 0)
             y = 0;
-        if (x > GameConstants.GAME_SCREEN_WIDTH - size)
-            x = GameConstants.GAME_SCREEN_WIDTH - size - size / 2;
-        if (y > GameConstants.GAME_SCREEN_HEIGHT - size)
-            y = GameConstants.GAME_SCREEN_HEIGHT - size - size;
+        if (x > GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4)
+            x = GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4;
+        if (y > GameConstants.GAME_SCREEN_HEIGHT - size - size -1)
+            y = GameConstants.GAME_SCREEN_HEIGHT - size - size -1;
+
+    }
+
+    public void undoMove() {
+        this.x = this.previousX;
+        this.y = this.previousY;
+        this.hitBox.setLocation(previousX, previousY);
     }
 
     /**
@@ -169,7 +183,7 @@ public class Player {
         }
         
         // Tạo đạn và đặt thời gian hồi chiêu
-        bullets.add(new Attack(bulletX, bulletY, facingDirection, color, sprite));
+        bullets.add(new Bullet(bulletX, bulletY, facingDirection, color, sprite));
         lastShootTime = currentTime;
     }
     
@@ -179,7 +193,7 @@ public class Player {
     public void updateBullets() {
         // Cập nhật tất cả đạn đang hoạt động
         for (int i = 0; i < bullets.size(); i++) {
-            Attack bullet = bullets.get(i);
+            Bullet bullet = bullets.get(i);
             bullet.update();
             
             // Xóa đạn không còn hoạt động
@@ -195,7 +209,7 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void drawBullets(Graphics g) {
-        for (Attack bullet : bullets) {
+        for (Bullet bullet : bullets) {
             bullet.draw(g);
         }
     }
@@ -204,7 +218,7 @@ public class Player {
      * Lấy danh sách đạn
      * @return Danh sách đạn đang hoạt động
      */
-    public List<Attack> getBullets() {
+    public List<Bullet> getBullets() {
         return bullets;
     }
 
@@ -283,5 +297,9 @@ public class Player {
      */
     public int getSize() {
         return size;
+    }
+
+    public Rectangle getBounds() {
+        return hitBox;
     }
 }

@@ -13,7 +13,7 @@ import graphics.Sprite;
  * Attack - đại diện cho một viên đạn trong game
  * Quản lý vị trí, di chuyển và vẽ đạn
  */
-public class Attack {
+public class Bullet {
     private int speed = 2;           // Tốc độ di chuyển đạn
     private int x, y;                 // Vị trí đạn
     private int width = 10, height = 10; // Kích thước đạn
@@ -31,7 +31,7 @@ public class Attack {
      * @param color Màu sắc đạn
      * @param sprite Đối tượng Sprite để lấy hình ảnh
      */
-    public Attack(int x, int y, int direction, Color color, Sprite sprite) {
+    public Bullet(int x, int y, int direction, Color color, Sprite sprite) {
         this.x = x;
         this.y = y;
         this.direction = direction;
