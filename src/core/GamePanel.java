@@ -92,8 +92,8 @@ public class GamePanel extends JPanel {
         checkBulletWallCollision(player_1);
         checkBulletWallCollision(player_2);
 
-        // checkPlayerWallCollision(player_1);
-        // checkPlayerWallCollision(player_2);
+        checkPlayerWallCollision(player_1);
+        checkPlayerWallCollision(player_2);
     }
 
     private void checkBulletWallCollision(Player player) {
@@ -115,7 +115,7 @@ public class GamePanel extends JPanel {
     private void checkPlayerWallCollision(Player player) {
         Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
     
-        for (Wall wall : tileM.getWalls()) {
+        for (Wall wall : new ArrayList<>(tileM.getWalls())) {
             if (playerBounds.intersects(wall.getHitBox())) {
                 player.undoMove(); // Hủy di chuyển nếu va chạm tường
                 break;
