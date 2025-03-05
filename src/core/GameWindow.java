@@ -30,3 +30,5 @@ public class GameWindow {
         jFrame.setVisible(true);  // Hiển thị cửa sổ
     }
 }
+
+

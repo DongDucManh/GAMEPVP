@@ -29,6 +29,7 @@ public class Game implements Runnable {
         gameThread.start();             // Bắt đầu luồng (gọi phương thức run())
     }
 
+
     /**
      * Vòng lặp game chính - chạy trong một luồng riêng
      * Sử dụng timestepping để đảm bảo tốc độ nhất quán trên các hệ thống khác nhau
