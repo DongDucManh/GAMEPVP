@@ -4,7 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import entities.Player;
-import entities.Attack;
+import entities.Wall;
+import entities.Bullet;
 import inputs.KeyBoardsHandle;
 import tile.TileManager;
 import graphics.Sprite;
@@ -24,7 +25,6 @@ public class GamePanel extends JPanel {
     private KeyBoardsHandle keyBoardsHandle;  // Xử lý đầu vào từ bàn phím
     private Sprite sprite;                 // Quản lý hình ảnh sprite
     
-
     TileManager tileM = new TileManager(this);
     
     /**
@@ -46,6 +46,8 @@ public class GamePanel extends JPanel {
         // Đảm bảo panel có thể nhận focus để xử lý phím
         setFocusable(true);
         requestFocus();
+        player_2.setMoveDirection(2);
+        player_2.updateFacingDirection(false);
     }
 
     /**
@@ -54,7 +56,7 @@ public class GamePanel extends JPanel {
      */
     public void updateGame() {
         // Xử lý đầu vào và cập nhật trạng thái
-        
+        Graphics2D g;
         // Cập nhật di chuyển người chơi
         setMoving(1);
         setMoving(2);
@@ -84,13 +86,49 @@ public class GamePanel extends JPanel {
             player_2.shoot();
         }
     }
+    private void checkCollisions() {
+        checkBulletPlayerCollisions();
+
+        checkBulletWallCollision(player_1);
+        checkBulletWallCollision(player_2);
+
+        // checkPlayerWallCollision(player_1);
+        // checkPlayerWallCollision(player_2);
+    }
+
+    private void checkBulletWallCollision(Player player) {
+        ArrayList<Bullet> bullets = new ArrayList<>(player.getBullets());
+
+        for(Bullet bullet : bullets) {
+
+            Rectangle bulletBounds = bullet.getBounds();    
+            
+            for(Wall wall : new ArrayList<>(tileM.getWalls())) {
+                if(bulletBounds.intersects(wall.getHitBox())) {
+                    bullet.deactivate();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void checkPlayerWallCollision(Player player) {
+        Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
     
+        for (Wall wall : tileM.getWalls()) {
+            if (playerBounds.intersects(wall.getHitBox())) {
+                player.undoMove(); // Hủy di chuyển nếu va chạm tường
+                break;
+            }
+        }
+    }
+
     /**
      * Kiểm tra va chạm giữa đạn và người chơi
      */
-    private void checkCollisions() {
+    private void checkBulletPlayerCollisions() {
         // Kiểm tra đạn của người chơi 1 có trúng người chơi 2 không
-        for (Attack bullet : new ArrayList<>(player_1.getBullets())) {
+        for (Bullet bullet : new ArrayList<>(player_1.getBullets())) {
             Rectangle bulletBound = bullet.getBounds();
             Rectangle player2Bound = new Rectangle(
                 player_2.getX(), player_2.getY(), 
@@ -105,7 +143,7 @@ public class GamePanel extends JPanel {
         }
         
         // Kiểm tra đạn của người chơi 2 có trúng người chơi 1 không
-        for (Attack bullet : new ArrayList<>(player_2.getBullets())) {
+        for (Bullet bullet : new ArrayList<>(player_2.getBullets())) {
             Rectangle bulletBound = bullet.getBounds();
             Rectangle player1Bound = new Rectangle(
                 player_1.getX(), player_1.getY(), 
@@ -150,12 +188,12 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
         
-        tileM.draw(g2);
-        
+        tileM.draw(g);
+
         // Vẽ người chơi
         player_1.draw(g);
+        
         player_2.draw(g);
         
         // Vẽ đạn
@@ -164,7 +202,6 @@ public class GamePanel extends JPanel {
         
         // Vẽ hướng dẫn
         drawInstructions(g);
-        g2.dispose();
     }
     
     /**
