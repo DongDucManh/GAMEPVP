@@ -175,25 +175,25 @@ public class Player {
         // Điều chỉnh vị trí bắt đầu của đạn dựa trên hướng nhìn của người chơi
         switch (facingDirection) {
             case 0: // Lên
-                bulletX += size / 2 - 8;
+                bulletX += size / 2 - 4;
                 bulletY -= 16;
                 break;
             case 1: // Xuống
-                bulletX += size / 2 - 8;
+                bulletX += size / 2 -  4;
                 bulletY += size;
                 break;
             case 2: // Trái
                 bulletX -= 16;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  -4;
                 break;
             case 3: // Phải
                 bulletX += size;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  - 4;
                 break;
             default:
                 // Nếu không có hướng, mặc định bắn sang phải
                 bulletX += size;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  - 4;
                 facingDirection = 3;
                 break;
         }
@@ -245,9 +245,9 @@ public class Player {
     public void draw(Graphics g) {
         g.setColor(Color.RED);
         if (color == Color.BLUE)
-        {g.fillRect(0, 0, health, 30);}
+        {g.fillRect(0, 0, health, 10);}
         else {
-            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 30);
+            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
         }
         if (sprite != null) {
             // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
@@ -282,6 +282,7 @@ public class Player {
     }
 
     public Rectangle getBounds() {
-        return hitBox;
+
+        return new Rectangle(x,y,size,size);
     }
 }
