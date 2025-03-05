@@ -128,10 +128,10 @@ public class Player {
             x = 0;
         if (y < 0)
             y = 0;
-        if (x > GameConstants.GAME_SCREEN_WIDTH - size)
-            x = GameConstants.GAME_SCREEN_WIDTH - size - size / 2;
-        if (y > GameConstants.GAME_SCREEN_HEIGHT - size)
-            y = GameConstants.GAME_SCREEN_HEIGHT - size - size;
+        if (x > GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4)
+            x = GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4;
+        if (y > GameConstants.GAME_SCREEN_HEIGHT - size - size -1)
+            y = GameConstants.GAME_SCREEN_HEIGHT - size - size -1;
 
     }
 

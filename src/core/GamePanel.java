@@ -92,8 +92,8 @@ public class GamePanel extends JPanel {
         checkBulletWallCollision(player_1);
         checkBulletWallCollision(player_2);
 
-        checkPlayerWallCollision(player_1);
-        checkPlayerWallCollision(player_2);
+         checkPlayerWallCollision(player_1);
+         checkPlayerWallCollision(player_2);
     }
 
     private void checkBulletWallCollision(Player player) {
@@ -117,11 +117,13 @@ public class GamePanel extends JPanel {
     
         for (Wall wall : new ArrayList<>(tileM.getWalls())) {
             if (playerBounds.intersects(wall.getHitBox())) {
-                player.undoMove(); // Hủy di chuyển nếu va chạm tường
+                player.undoMove();
+                System.out.println("cham");
                 break;
             }
         }
     }
+
 
     /**
      * Kiểm tra va chạm giữa đạn và người chơi
