@@ -76,7 +76,6 @@ public class Game implements Runnable {
             // Hiển thị FPS mỗi giây
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
-                System.out.println("FPS: " + frames + " | UPS: " + updates);
                 frames = 0;
                 updates = 0;
             }
