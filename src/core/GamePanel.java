@@ -91,9 +91,9 @@ public class GamePanel extends JPanel {
 
         checkBulletWallCollision(player_1);
         checkBulletWallCollision(player_2);
-
-         checkPlayerWallCollision(player_1);
-         checkPlayerWallCollision(player_2);
+        checkPlayerWallCollision(player_1);
+        checkPlayerWallCollision(player_2);
+        checkTwoPlayerCollision(player_2, player_1);
     }
 
     private void checkBulletWallCollision(Player player) {
@@ -123,11 +123,23 @@ public class GamePanel extends JPanel {
             }
         }
     }
-
+    private void checkTwoPlayerCollision(Player p1, Player p2){
+        if (p1.getBounds().intersects(p2.getBounds()) || p2.getBounds().intersects(p1.getBounds())){
+            p1.undoMove();
+            p2.undoMove();
+        }
+    }
 
     /**
      * Kiểm tra va chạm giữa đạn và người chơi
      */
+    private void updateHealth(Player p1){
+        p1.setHealth(p1.getHealth() - Bullet.DAME);
+                p1.checkDead();
+                if (!p1.getIsDead()){
+                    //System.out.println("Nguoi choi 2 chet");
+                }
+    }
     private void checkBulletPlayerCollisions() {
         // Kiểm tra đạn của người chơi 1 có trúng người chơi 2 không
         for (Bullet bullet : new ArrayList<>(player_1.getBullets())) {
@@ -139,7 +151,7 @@ public class GamePanel extends JPanel {
             
             if (bulletBound.intersects(player2Bound)) {
                 bullet.deactivate();
-                // Xử lý logic khi trúng đạn (ví dụ: giảm máu, tính điểm)
+                updateHealth(player_2);
                 System.out.println("P1 hit P2!");
             }
         }
@@ -155,6 +167,7 @@ public class GamePanel extends JPanel {
             if (bulletBound.intersects(player1Bound)) {
                 bullet.deactivate();
                 // Xử lý logic khi trúng đạn
+                updateHealth(player_1);
                 System.out.println("P2 hit P1!");
             }
         }
