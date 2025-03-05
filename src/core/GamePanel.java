@@ -139,7 +139,11 @@ public class GamePanel extends JPanel {
             
             if (bulletBound.intersects(player2Bound)) {
                 bullet.deactivate();
-                // Xử lý logic khi trúng đạn (ví dụ: giảm máu, tính điểm)
+                player_2.setHealth(player_2.getHealth() - 50);
+                player_2.checkDead();
+                if (!player_2.getIsDead()){
+                    System.out.println("Nguoi choi 2 chet");
+                }
                 System.out.println("P1 hit P2!");
             }
         }

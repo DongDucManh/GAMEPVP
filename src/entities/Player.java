@@ -31,6 +31,9 @@ public class Player {
     private int previousX;
     private int previousY;
     private Rectangle hitBox;
+    private int health ;
+    private int maxHealth = 100;
+    private boolean isDead = false;
     /**
      * Khởi tạo người chơi
      * @param x Tọa độ X ban đầu
@@ -55,7 +58,7 @@ public class Player {
         
         // Xác định xe tăng là màu xanh hay đỏ dựa theo label
         this.isBlue = label.equals("P1");
-
+        this.health = maxHealth;
         this.hitBox = new Rectangle(x, y, size, size);
     }
 
@@ -66,7 +69,20 @@ public class Player {
     public void setMoveDirection(int direction) {
         this.moveDirection = direction;
     }
-    
+    public void setHealth(int health){
+        this.health = health;
+    }
+    public int getHealth(){
+        return this.health;
+    }
+    public void checkDead(){
+        if (health<=0){
+            isDead = true;
+        }
+    }
+    public boolean getIsDead(){
+        return !isDead;
+    }
     /**
      * Cập nhật hướng nhìn dựa trên hướng di chuyển
      * @param lockDirection True nếu hướng nhìn bị khóa (không thay đổi)
@@ -92,7 +108,7 @@ public class Player {
     public void move() {
         // Chỉ di chuyển nếu có hướng di chuyển
         if (moveDirection == -1) return;
-
+        if (moveDirection == 10) {health = maxHealth; return;}
         previousX = x;
         previousY = y;
 
@@ -227,6 +243,12 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
+        g.setColor(Color.RED);
+        if (color == Color.BLUE)
+        {g.fillRect(0, 0, health, 30);}
+        else {
+            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 30);
+        }
         if (sprite != null) {
             // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
             BufferedImage tankImg = sprite.getTank(isBlue);
@@ -234,48 +256,8 @@ public class Player {
             
             // Vẽ xe tăng
             g.drawImage(rotatedTank, x, y, size, size, null);
-        } //else {
-            // Vẽ hình vuông người chơi nếu không có sprite
-           // g.setColor(color);
-            //g.fillRect(x, y, size, size);
-            
-            // // Vẽ chỉ báo hướng nhìn
-            // g.setColor(Color.YELLOW);
-            
-            // // Vẽ chỉ báo tam giác thể hiện hướng nhìn của người chơi
-            // int[] xPoints = new int[3];
-            // int[] yPoints = new int[3];
-            
-            // switch (facingDirection) {
-            //     case 0: // Lên
-            //         xPoints[0] = x + size/2;     yPoints[0] = y - 5;
-            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y;
-            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y;
-            //         break;
-            //     case 1: // Xuống
-            //         xPoints[0] = x + size/2;     yPoints[0] = y + size + 5;
-            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y + size;
-            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y + size;
-            //         break;
-            //     case 2: // Trái
-            //         xPoints[0] = x - 5;          yPoints[0] = y + size/2;
-            //         xPoints[1] = x;              yPoints[1] = y + size/2 - 5;
-            //         xPoints[2] = x;              yPoints[2] = y + size/2 + 5;
-            //         break;
-            //     case 3: // Phải
-            //         xPoints[0] = x + size + 5;   yPoints[0] = y + size/2;
-            //         xPoints[1] = x + size;       yPoints[1] = y + size/2 - 5;
-            //         xPoints[2] = x + size;       yPoints[2] = y + size/2 + 5;
-            //         break;
-          //  }
-            
-            //g.fillPolygon(xPoints, yPoints, 3);
-       // }
+        } 
 
-        // Vẽ nhãn người chơi phía trên
-        //g.setColor(Color.WHITE);
-        //g.setFont(new Font("Arial", Font.BOLD, 14));
-        //g.drawString(label, x + (size / 2) - 10, y - 10);
     }
     
     /**

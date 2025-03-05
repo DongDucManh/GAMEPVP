@@ -16,7 +16,7 @@ import graphics.Sprite;
 public class Bullet {
     private int speed = 2;           // Tốc độ di chuyển đạn
     private int x, y;                 // Vị trí đạn
-    private int width = 10, height = 10; // Kích thước đạn
+    private int width = 7, height = 7; // Kích thước đạn
     private boolean active = true;    // Trạng thái hoạt động
     private int direction;            // Hướng di chuyển
     private Color color;              // Màu sắc (theo người chơi)
