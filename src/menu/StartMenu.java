@@ -67,11 +67,6 @@ public class StartMenu extends JPanel{
         f.setVisible(true);
     }
 
-    
-    public static void main(String[] arg){
-        StartMenu he = new StartMenu();
-        
-    }
 }
 
 

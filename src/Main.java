@@ -1,4 +1,6 @@
 import core.Game;
+import menu.StartMenu;
+
 import java.io.File;
 
 /**
@@ -13,6 +15,6 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Khởi động game...");
         // Khởi tạo đối tượng Game - điều này sẽ bắt đầu vòng lặp game
-        Game game = new Game();
+        StartMenu st = new StartMenu();
     }
 }
