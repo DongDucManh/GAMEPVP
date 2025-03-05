@@ -23,12 +23,17 @@ public class Player {
     private int facingDirection = 3;       // Hướng nhìn (mặc định: phải)
     private Color color;                   // Màu sắc người chơi
     // private String label;                  // Nhãn hiển thị (P1/P2)
-    private List<Attack> bullets;          // Danh sách đạn đã bắn
+    private List<Bullet> bullets;          // Danh sách đạn đã bắn
     private long lastShootTime;            // Thời gian bắn đạn cuối cùng
     private static final long SHOOT_COOLDOWN = 500; // Thời gian hồi chiêu (ms)
     private boolean isBlue; // Xác định màu xe tăng (true: xanh, false: đỏ)
     private Sprite sprite;  // Tham chiếu đến đối tượng Sprite
-
+    private int previousX;
+    private int previousY;
+    private Rectangle hitBox;
+    private int health ;
+    private int maxHealth = 100;
+    private boolean isDead = false;
     /**
      * Khởi tạo người chơi
      * @param x Tọa độ X ban đầu
@@ -42,6 +47,7 @@ public class Player {
     public Player(int x, int y, int speed, int size, Color color, String label, Sprite sprite) {
         this.x = x;
         this.y = y;
+
         this.speed = speed;
         this.size = size;
         this.color = color;
@@ -52,6 +58,8 @@ public class Player {
         
         // Xác định xe tăng là màu xanh hay đỏ dựa theo label
         this.isBlue = label.equals("P1");
+        this.health = maxHealth;
+        this.hitBox = new Rectangle(x, y, size, size);
     }
 
     /**
@@ -61,7 +69,20 @@ public class Player {
     public void setMoveDirection(int direction) {
         this.moveDirection = direction;
     }
-    
+    public void setHealth(int health){
+        this.health = health;
+    }
+    public int getHealth(){
+        return this.health;
+    }
+    public void checkDead(){
+        if (health<=0){
+            isDead = true;
+        }
+    }
+    public boolean getIsDead(){
+        return !isDead;
+    }
     /**
      * Cập nhật hướng nhìn dựa trên hướng di chuyển
      * @param lockDirection True nếu hướng nhìn bị khóa (không thay đổi)
@@ -86,8 +107,10 @@ public class Player {
      */
     public void move() {
         // Chỉ di chuyển nếu có hướng di chuyển
-        if (moveDirection == -1)
-            return;
+        if (moveDirection == -1) return;
+        if (moveDirection == 10) {health = maxHealth; return;}
+        previousX = x;
+        previousY = y;
 
         // Tăng tốc độ di chuyển để mượt hơn
         int actualSpeed = speed;
@@ -121,10 +144,17 @@ public class Player {
             x = 0;
         if (y < 0)
             y = 0;
-        if (x > GameConstants.GAME_SCREEN_WIDTH - size)
-            x = GameConstants.GAME_SCREEN_WIDTH - size - size / 2;
-        if (y > GameConstants.GAME_SCREEN_HEIGHT - size)
-            y = GameConstants.GAME_SCREEN_HEIGHT - size - size;
+        if (x > GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4)
+            x = GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4;
+        if (y > GameConstants.GAME_SCREEN_HEIGHT - size - size -1)
+            y = GameConstants.GAME_SCREEN_HEIGHT - size - size -1;
+
+    }
+
+    public void undoMove() {
+        this.x = this.previousX;
+        this.y = this.previousY;
+        this.hitBox.setLocation(previousX, previousY);
     }
 
     /**
@@ -145,31 +175,31 @@ public class Player {
         // Điều chỉnh vị trí bắt đầu của đạn dựa trên hướng nhìn của người chơi
         switch (facingDirection) {
             case 0: // Lên
-                bulletX += size / 2 - 8;
+                bulletX += size / 2 - 4;
                 bulletY -= 16;
                 break;
             case 1: // Xuống
-                bulletX += size / 2 - 8;
+                bulletX += size / 2 -  4;
                 bulletY += size;
                 break;
             case 2: // Trái
                 bulletX -= 16;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  -4;
                 break;
             case 3: // Phải
                 bulletX += size;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  - 4;
                 break;
             default:
                 // Nếu không có hướng, mặc định bắn sang phải
                 bulletX += size;
-                bulletY += size / 2 - 8;
+                bulletY += size / 2  - 4;
                 facingDirection = 3;
                 break;
         }
         
         // Tạo đạn và đặt thời gian hồi chiêu
-        bullets.add(new Attack(bulletX, bulletY, facingDirection, color, sprite));
+        bullets.add(new Bullet(bulletX, bulletY, facingDirection, color, sprite));
         lastShootTime = currentTime;
     }
     
@@ -179,7 +209,7 @@ public class Player {
     public void updateBullets() {
         // Cập nhật tất cả đạn đang hoạt động
         for (int i = 0; i < bullets.size(); i++) {
-            Attack bullet = bullets.get(i);
+            Bullet bullet = bullets.get(i);
             bullet.update();
             
             // Xóa đạn không còn hoạt động
@@ -195,7 +225,7 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void drawBullets(Graphics g) {
-        for (Attack bullet : bullets) {
+        for (Bullet bullet : bullets) {
             bullet.draw(g);
         }
     }
@@ -204,7 +234,7 @@ public class Player {
      * Lấy danh sách đạn
      * @return Danh sách đạn đang hoạt động
      */
-    public List<Attack> getBullets() {
+    public List<Bullet> getBullets() {
         return bullets;
     }
 
@@ -213,6 +243,12 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
+        g.setColor(Color.RED);
+        if (color == Color.BLUE)
+        {g.fillRect(0, 0, health, 10);}
+        else {
+            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
+        }
         if (sprite != null) {
             // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
             BufferedImage tankImg = sprite.getTank(isBlue);
@@ -220,48 +256,8 @@ public class Player {
             
             // Vẽ xe tăng
             g.drawImage(rotatedTank, x, y, size, size, null);
-        } //else {
-            // Vẽ hình vuông người chơi nếu không có sprite
-           // g.setColor(color);
-            //g.fillRect(x, y, size, size);
-            
-            // // Vẽ chỉ báo hướng nhìn
-            // g.setColor(Color.YELLOW);
-            
-            // // Vẽ chỉ báo tam giác thể hiện hướng nhìn của người chơi
-            // int[] xPoints = new int[3];
-            // int[] yPoints = new int[3];
-            
-            // switch (facingDirection) {
-            //     case 0: // Lên
-            //         xPoints[0] = x + size/2;     yPoints[0] = y - 5;
-            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y;
-            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y;
-            //         break;
-            //     case 1: // Xuống
-            //         xPoints[0] = x + size/2;     yPoints[0] = y + size + 5;
-            //         xPoints[1] = x + size/2 - 5; yPoints[1] = y + size;
-            //         xPoints[2] = x + size/2 + 5; yPoints[2] = y + size;
-            //         break;
-            //     case 2: // Trái
-            //         xPoints[0] = x - 5;          yPoints[0] = y + size/2;
-            //         xPoints[1] = x;              yPoints[1] = y + size/2 - 5;
-            //         xPoints[2] = x;              yPoints[2] = y + size/2 + 5;
-            //         break;
-            //     case 3: // Phải
-            //         xPoints[0] = x + size + 5;   yPoints[0] = y + size/2;
-            //         xPoints[1] = x + size;       yPoints[1] = y + size/2 - 5;
-            //         xPoints[2] = x + size;       yPoints[2] = y + size/2 + 5;
-            //         break;
-          //  }
-            
-            //g.fillPolygon(xPoints, yPoints, 3);
-       // }
+        } 
 
-        // Vẽ nhãn người chơi phía trên
-        //g.setColor(Color.WHITE);
-        //g.setFont(new Font("Arial", Font.BOLD, 14));
-        //g.drawString(label, x + (size / 2) - 10, y - 10);
     }
     
     /**
@@ -283,5 +279,10 @@ public class Player {
      */
     public int getSize() {
         return size;
+    }
+
+    public Rectangle getBounds() {
+
+        return new Rectangle(x,y,size,size);
     }
 }
