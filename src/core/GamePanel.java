@@ -118,7 +118,6 @@ public class GamePanel extends JPanel {
         for (Wall wall : new ArrayList<>(tileM.getWalls())) {
             if (playerBounds.intersects(wall.getHitBox())) {
                 player.undoMove();
-                System.out.println("cham");
                 break;
             }
         }
@@ -152,7 +151,6 @@ public class GamePanel extends JPanel {
             if (bulletBound.intersects(player2Bound)) {
                 bullet.deactivate();
                 updateHealth(player_2);
-                System.out.println("P1 hit P2!");
             }
         }
         
@@ -168,7 +166,6 @@ public class GamePanel extends JPanel {
                 bullet.deactivate();
                 // Xử lý logic khi trúng đạn
                 updateHealth(player_1);
-                System.out.println("P2 hit P1!");
             }
         }
     }
