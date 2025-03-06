@@ -1,13 +1,13 @@
-package core;
+package Core;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import Entities.Bullet;
+import Entities.Player;
+import Entities.Wall;
+import Inputs.KeyBoardsHandle;
 import Tile.TileManager;
-import entities.Player;
-import entities.Wall;
-import entities.Bullet;
-import inputs.KeyBoardsHandle;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
     private Player player_1, player_2;     // Hai người chơi trong game
     private KeyBoardsHandle keyBoardsHandle;  // Xử lý đầu vào từ bàn phím
     private Sprite sprite;                 // Quản lý hình ảnh sprite
-    
+    private boolean drawMap = true;
     TileManager tileM = new TileManager(this);
     
     /**
@@ -48,6 +48,7 @@ public class GamePanel extends JPanel {
         requestFocus();
         player_2.setMoveDirection(2);
         player_2.updateFacingDirection(false);
+
     }
 
     /**
@@ -200,8 +201,12 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
+        // if(drawMap == true) {
+        //     System.out.println(1);
         tileM.draw(g);
+        //     drawMap = false;
+        // }
 
         // Vẽ người chơi
         player_1.draw(g);

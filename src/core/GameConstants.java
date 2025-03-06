@@ -1,4 +1,4 @@
-package core;
+package Core;
 
 public class GameConstants {
     public static final int WORLD_WIDTH = 1000;

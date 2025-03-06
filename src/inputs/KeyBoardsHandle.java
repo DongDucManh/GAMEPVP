@@ -1,8 +1,9 @@
-package inputs;
+package Inputs;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import core.GamePanel;
+
+import Core.GamePanel;
 
 /**
  * KeyBoardsHandle - xử lý đầu vào từ bàn phím

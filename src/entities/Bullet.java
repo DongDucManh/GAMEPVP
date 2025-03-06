@@ -5,8 +5,7 @@ import java.awt.Color;
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
-import core.GameConstants;
+import Core.GameConstants;
 import graphics.Sprite;
 
 /**
@@ -38,9 +37,10 @@ public class Bullet {
         this.direction = direction;
         this.color = color;
         this.sprite = sprite;
-        
         // Lấy và xoay hình ảnh đạn theo hướng
         this.bulletImage = sprite.rotateImage(sprite.getBullet(), direction);
+
+        
     }
     
     /**

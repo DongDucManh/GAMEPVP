@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.List;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +16,9 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import core.GameConstants;
-import core.GamePanel;
-import entities.Wall;
+import Core.GameConstants;
+import Core.GamePanel;
+import Entities.Wall;
 
 public class TileManager {
     
@@ -25,6 +26,7 @@ public class TileManager {
     Tile[] tile;
     int mapTileNum[][];
     ArrayList<Wall> walls = new ArrayList<>();
+    private BufferedImage mapImage;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
@@ -34,6 +36,7 @@ public class TileManager {
 
         getTileImage();
         loadMap();
+        drawMapToImage();
     }
 
     public void getTileImage() {
@@ -42,11 +45,8 @@ public class TileManager {
             tile[0].image = ImageIO.read(new File("res/tiles/land.png"));
 
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(new File("res/tiles/brick32x32.png"));
-            // tile[2].collision = true;
+            tile[1].image = ImageIO.read(new File("res/tiles/brick.png"));
 
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(new File("res/tiles/cactus.png"));
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -54,7 +54,7 @@ public class TileManager {
 
     public void loadMap() {
         try {
-            InputStream is = new FileInputStream("res/maps/map.txt");
+            InputStream is = new FileInputStream("src/Maps/map.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
@@ -92,8 +92,12 @@ public class TileManager {
     //     }
     // }
 
-    public void draw(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
+    public void drawMapToImage() {
+        int width = GameConstants.MAX_SCREEN_COL * GameConstants.TILE_SIZE;
+        int height = GameConstants.MAX_SCREEN_ROW * GameConstants.TILE_SIZE;
+        mapImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = mapImage.createGraphics();
+
         int col = 0, row = 0;
         int x = 0, y = 0;
 
@@ -105,8 +109,9 @@ public class TileManager {
                 g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
                 Wall wall = new Wall(x, y, tile[tileNum].image);
                 walls.add(wall);
+            } else {
+                g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
             }
-            g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
             
             col++;
             x += GameConstants.TILE_SIZE;
@@ -118,6 +123,11 @@ public class TileManager {
                 y += GameConstants.TILE_SIZE;
             }
         }
+        g2.dispose();
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(mapImage, 0, 0, null);
     }
 
     public ArrayList<Wall> getWalls() {

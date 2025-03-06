@@ -1,7 +1,8 @@
-import core.Game;
-import menu.StartMenu;
-
+package Main;
 import java.io.File;
+
+import Core.Game;
+import Menu.StartMenu;
 
 /**
  * Lớp Main - điểm khởi đầu của chương trình

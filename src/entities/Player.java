@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.GameConstants;
+import Core.GameConstants;
 import graphics.Sprite;
 
 /**
@@ -242,12 +242,12 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
-        if (color == Color.BLUE)
-        {g.fillRect(0, 0, health, 10);}
-        else {
-            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
-        }
+        // g.setColor(Color.RED);
+        // if (color == Color.BLUE)
+        // {g.fillRect(0, 0, health, 10);}
+        // else {
+        //     g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
+        // }
         if (sprite != null) {
             // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
             BufferedImage tankImg = sprite.getTank(isBlue);

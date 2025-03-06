@@ -1,4 +1,4 @@
-package menu;
+package Menu;
 
 
 import javax.swing.BoxLayout;
@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import core.Game;
-import core.GameConstants;
+import Core.Game;
+import Core.GameConstants;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,7 +35,7 @@ public class StartMenu extends JPanel{
         f.setLayout(null);
 
 
-        start = new JButton(new ImageIcon("res/image menu/playbutton.png"));
+        start = new JButton(new ImageIcon("res/menu/playButton.png"));
         start.setFont(new Font("Impact", Font.BOLD, 24));
         start.setBounds(((GameConstants.GAME_SCREEN_WIDTH / 2) - 220) / 2, 325, 220, 130);
         start.setBorderPainted(false);
@@ -49,7 +49,7 @@ public class StartMenu extends JPanel{
             } 
         });
 
-        exit = new JButton(new ImageIcon("res/image menu/exitbutton.png"));
+        exit = new JButton(new ImageIcon("res/menu/exitButton.png"));
         exit.setFont(new Font("Impact", Font.BOLD, 24));
         exit.setBounds(((GameConstants.GAME_SCREEN_WIDTH / 2) - 220) / 2, 460, 220, 130);
         exit.setBorderPainted(false);
