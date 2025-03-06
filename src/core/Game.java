@@ -5,25 +5,19 @@ package core;
  * Thực hiện Runnable để tạo một luồng riêng cho vòng lặp game
  */
 public class Game implements Runnable {
-    private GameWindow gameWindow;    // Cửa sổ game
-    private GamePanel gamePanel;      // Panel chứa logic vẽ và cập nhật game
-    private Thread gameThread;        // Luồng vòng lặp game
-    private final int FPS_SET = 120;  // Số khung hình mỗi giây
-    private final int UPS_SET = 200;  // Số lần cập nhật logic mỗi giây
+    private GameWindow gameWindow;   
+    private GamePanel gamePanel;    
+    private Thread gameThread;       
+    private final int FPS_SET = 120; 
+    private final int UPS_SET = 200; 
     
-    /**
-     * Khởi tạo game - tạo panel, cửa sổ và bắt đầu vòng lặp
-     */
     public Game() {
-        gamePanel = new GamePanel();              // Tạo panel game
-        gameWindow = new GameWindow(gamePanel);   // Tạo cửa sổ game và thêm panel vào
+        gamePanel = new GamePanel();             
+        gameWindow = new GameWindow(gamePanel);   
         gamePanel.requestFocus();                 // Đặt focus vào panel để nhận input
-        startGameLoop();                          // Bắt đầu vòng lặp game
+        startGameLoop();                      
     }
 
-    /**
-     * Khởi tạo và bắt đầu luồng vòng lặp game
-     */
     private void startGameLoop() {
         gameThread = new Thread(this);  // Tạo luồng mới với Game là Runnable
         gameThread.start();             // Bắt đầu luồng (gọi phương thức run())

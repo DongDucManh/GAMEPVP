@@ -35,7 +35,7 @@ public class StartMenu extends JPanel{
         f.setLayout(null);
 
 
-        start = new JButton(new ImageIcon("src/menu/image menu/playbutton.png"));
+        start = new JButton(new ImageIcon("res/image menu/playbutton.png"));
         start.setFont(new Font("Impact", Font.BOLD, 24));
         start.setBounds(((GameConstants.GAME_SCREEN_WIDTH / 2) - 220) / 2, 325, 220, 130);
         start.setBorderPainted(false);
@@ -49,7 +49,7 @@ public class StartMenu extends JPanel{
             } 
         });
 
-        exit = new JButton(new ImageIcon("src/menu/image menu/exitbutton.png"));
+        exit = new JButton(new ImageIcon("res/image menu/exitbutton.png"));
         exit.setFont(new Font("Impact", Font.BOLD, 24));
         exit.setBounds(((GameConstants.GAME_SCREEN_WIDTH / 2) - 220) / 2, 460, 220, 130);
         exit.setBorderPainted(false);

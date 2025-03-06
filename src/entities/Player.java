@@ -1,7 +1,6 @@
-package entities;
+package Entities;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
@@ -282,7 +281,6 @@ public class Player {
     }
 
     public Rectangle getBounds() {
-
         return new Rectangle(x,y,size,size);
     }
 }

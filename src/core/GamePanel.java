@@ -3,11 +3,11 @@ package core;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import Tile.TileManager;
 import entities.Player;
 import entities.Wall;
 import entities.Bullet;
 import inputs.KeyBoardsHandle;
-import tile.TileManager;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -212,17 +212,6 @@ public class GamePanel extends JPanel {
         player_1.drawBullets(g);
         player_2.drawBullets(g);
         
-        // Vẽ hướng dẫn
-        drawInstructions(g);
     }
-    
-    /**
-     * Vẽ hướng dẫn điều khiển lên màn hình
-     */
-    private void drawInstructions(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.PLAIN, 12));
-        g.drawString("P1: WASD để di chuyển, SPACE để bắn (có thể đồng thời), SHIFT để khóa hướng", 20, 20);
-        g.drawString("P2: Phím mũi tên để di chuyển, Numpad 0 để bắn (có thể đồng thời), CTRL để khóa hướng", 20, 40);
-    }
+
 }
