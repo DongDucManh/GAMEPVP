@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,7 @@ import javax.imageio.ImageIO;
 import Core.GameConstants;
 import Core.GamePanel;
 import Entities.Wall;
+import Entities.Water;
 
 public class TileManager {
     
@@ -26,6 +28,7 @@ public class TileManager {
     Tile[] tile;
     int mapTileNum[][];
     ArrayList<Wall> walls = new ArrayList<>();
+    ArrayList<Water> waters = new ArrayList<>();
     private BufferedImage mapImage;
 
     public TileManager(GamePanel gp) {
@@ -45,8 +48,10 @@ public class TileManager {
             tile[0].image = ImageIO.read(new File("res/tiles/land.png"));
 
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(new File("res/tiles/brick.png"));
+            tile[1].image = ImageIO.read(new File("res/tiles/brick32x32.png"));
 
+            tile[2] = new Tile();
+            tile[2].image = ImageIO.read(new File("res/tiles/water.png"));
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -63,13 +68,16 @@ public class TileManager {
             while(col < GameConstants.MAX_SCREEN_COL && row < GameConstants.MAX_SCREEN_ROW) {
 
                 String line = br.readLine();
+                if(line == null) {
+                    break;
+                }
 
                 while(col < GameConstants.MAX_SCREEN_COL) {
 
                     String numbers[] = line.split(" ");
 
                     int num = Integer.parseInt(numbers[col]);
-
+                    
                     mapTileNum[col][row] = num;
                     col++;
                 }
@@ -83,14 +91,6 @@ public class TileManager {
             e.printStackTrace();
         }
     }
-
-    // public void updateWall(Graphics2D g) {
-    //     for(Wall wall : walls) {
-    //         if(wall.isVisible()) {
-    //             wall.drawImage(g);
-    //         }
-    //     }
-    // }
 
     public void drawMapToImage() {
         int width = GameConstants.MAX_SCREEN_COL * GameConstants.TILE_SIZE;
@@ -109,6 +109,10 @@ public class TileManager {
                 g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
                 Wall wall = new Wall(x, y, tile[tileNum].image);
                 walls.add(wall);
+            } else if(tileNum == 2) {
+                g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
+                Water water = new Water(x, y, tile[tileNum].image);
+                waters.add(water);
             } else {
                 g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
             }
@@ -132,5 +136,9 @@ public class TileManager {
 
     public ArrayList<Wall> getWalls() {
         return walls;
+    }
+
+    public ArrayList<Water> getWaters() {
+        return waters;
     }
 }

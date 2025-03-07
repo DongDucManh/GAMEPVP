@@ -34,7 +34,6 @@ public class StartMenu extends JPanel{
         f.setBackground(Color.RED);
         f.setLayout(null);
 
-
         start = new JButton(new ImageIcon("res/menu/playButton.png"));
         start.setFont(new Font("Impact", Font.BOLD, 24));
         start.setBounds(((GameConstants.GAME_SCREEN_WIDTH / 2) - 220) / 2, 325, 220, 130);

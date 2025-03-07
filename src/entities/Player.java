@@ -242,12 +242,12 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
-        // g.setColor(Color.RED);
-        // if (color == Color.BLUE)
-        // {g.fillRect(0, 0, health, 10);}
-        // else {
-        //     g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
-        // }
+        g.setColor(Color.RED);
+        if (color == Color.BLUE)
+        {g.fillRect(0, 0, health, 10);}
+        else {
+            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
+        }
         if (sprite != null) {
             // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
             BufferedImage tankImg = sprite.getTank(isBlue);
@@ -272,6 +272,10 @@ public class Player {
     public int getY() {
         return y;
     }
+
+    public int getSpeed() {
+        return speed;
+    }
     
     /**
      * Lấy kích thước
@@ -281,6 +285,11 @@ public class Player {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x,y,size,size);
+        return new Rectangle(x,y,size-5,size-5);
     }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+    
 }

@@ -5,13 +5,13 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-public class Wall {
+public class Water {
     private float x, y;
     private BufferedImage img;
 
     private Rectangle hitBox;
 
-    public Wall(float x, float y, BufferedImage img) {
+    public Water(float x, float y, BufferedImage img) {
         this.y = y;
         this.x = x;
         this.img = img;

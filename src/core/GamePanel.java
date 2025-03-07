@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import Entities.Bullet;
 import Entities.Player;
 import Entities.Wall;
+import Entities.Water;
 import Inputs.KeyBoardsHandle;
 import Tile.TileManager;
 import graphics.Sprite;
@@ -35,8 +36,8 @@ public class GamePanel extends JPanel {
         sprite = new Sprite();
         
         // Tạo người chơi với các thông số và nhãn
-        player_1 = new Player(0, GameConstants.GAME_SCREEN_HEIGHT/2, 1, 32, Color.BLUE, "P1", sprite);
-        player_2 = new Player(GameConstants.GAME_SCREEN_WIDTH-GameConstants.TILE_SIZE*2, GameConstants.GAME_SCREEN_HEIGHT/2, 1, 32, Color.RED, "P2", sprite);
+        player_1 = new Player(GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, 2, 32, Color.BLUE, "P1", sprite);
+        player_2 = new Player(GameConstants.GAME_SCREEN_WIDTH-GameConstants.TILE_SIZE*3, GameConstants.GAME_SCREEN_HEIGHT-GameConstants.TILE_SIZE*3-GameConstants.TILE_SIZE/2, 1, 32, Color.RED, "P2", sprite);
         
         // Thiết lập xử lý đầu vào
         keyBoardsHandle = new KeyBoardsHandle(this);
@@ -92,9 +93,27 @@ public class GamePanel extends JPanel {
 
         checkBulletWallCollision(player_1);
         checkBulletWallCollision(player_2);
+
         checkPlayerWallCollision(player_1);
         checkPlayerWallCollision(player_2);
+
+        checkPlayerWaterCollision(player_1);
+        checkPlayerWaterCollision(player_2);
+
         checkTwoPlayerCollision(player_2, player_1);
+    }
+
+    private void checkPlayerWaterCollision(Player player) {
+        Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
+    
+        for (Water water : new ArrayList<>(tileM.getWaters())) {
+            if (playerBounds.intersects(water.getHitBox())) {
+                player.setSpeed(1);
+                break;
+            } else {
+                player.setSpeed(2);
+            }
+        }
     }
 
     private void checkBulletWallCollision(Player player) {
@@ -123,6 +142,7 @@ public class GamePanel extends JPanel {
             }
         }
     }
+
     private void checkTwoPlayerCollision(Player p1, Player p2){
         if (p1.getBounds().intersects(p2.getBounds()) || p2.getBounds().intersects(p1.getBounds())){
             p1.undoMove();
@@ -137,7 +157,7 @@ public class GamePanel extends JPanel {
         p1.setHealth(p1.getHealth() - Bullet.DAME);
                 p1.checkDead();
                 if (!p1.getIsDead()){
-                    //System.out.println("Nguoi choi 2 chet");
+                    
                 }
     }
     private void checkBulletPlayerCollisions() {

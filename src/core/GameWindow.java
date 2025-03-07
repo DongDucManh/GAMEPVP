@@ -14,6 +14,7 @@ public class GameWindow {
      * Tạo cửa sổ game với panel được truyền vào
      * @param gamePanel Panel chứa logic game và render
      */
+    
     public GameWindow(GamePanel gamePanel) {
         jFrame = new JFrame("Game");  // Tạo cửa sổ với tiêu đề "Game"
         
