@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import Core.GameConstants;
+import core.GameConstants;
 import graphics.Sprite;
 
 /**

@@ -1,11 +1,11 @@
-package Entities;
+package entities;
 
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.*;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import Core.GameConstants;
+import core.GameConstants;
 import graphics.Sprite;
 
 /**

@@ -1,4 +1,4 @@
-package Menu;
+package menu;
 
 
 import javax.swing.BoxLayout;
@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import Core.Game;
-import Core.GameConstants;
+import core.Game;
+import core.GameConstants;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

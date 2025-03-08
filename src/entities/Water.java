@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,7 +15,7 @@ public class Water {
         this.y = y;
         this.x = x;
         this.img = img;
-        this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
+        this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth()-1, this.img.getHeight()-1);
     }
 
     public Rectangle getHitBox() {

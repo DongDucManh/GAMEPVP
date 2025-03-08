@@ -1,4 +1,4 @@
-package Core;
+package core;
 
 /**
  * Lớp Game - quản lý vòng lặp game chính và các thành phần cốt lõi

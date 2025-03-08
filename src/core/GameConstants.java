@@ -1,4 +1,4 @@
-package Core;
+package core;
 
 public class GameConstants {
     public static final int TILE_SIZE = 32;

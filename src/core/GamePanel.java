@@ -1,15 +1,11 @@
-package Core;
+package core;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import Entities.Bullet;
-import Entities.Grass;
-import Entities.Player;
-import Entities.Wall;
-import Entities.Water;
-import Inputs.KeyBoardsHandle;
-import Tile.TileManager;
+import entities.*;
+import inputs.KeyBoardsHandle;
+import tile.TileManager;
 import effect.Boom;
 import graphics.Sprite;
 

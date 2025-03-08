@@ -1,4 +1,4 @@
-package Tile;
+package tile;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import Core.GameConstants;
-import Core.GamePanel;
-import Entities.Grass;
-import Entities.Wall;
-import Entities.Water;
+import core.GameConstants;
+import core.GamePanel;
+import entities.Grass;
+import entities.Wall;
+import entities.Water;
 
 
 public class TileManager {
