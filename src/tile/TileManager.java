@@ -19,8 +19,10 @@ import javax.imageio.ImageIO;
 
 import Core.GameConstants;
 import Core.GamePanel;
+import Entities.Grass;
 import Entities.Wall;
 import Entities.Water;
+
 
 public class TileManager {
     
@@ -29,6 +31,7 @@ public class TileManager {
     int mapTileNum[][];
     ArrayList<Wall> walls = new ArrayList<>();
     ArrayList<Water> waters = new ArrayList<>();
+    ArrayList<Grass> grasses = new ArrayList<>();
     private BufferedImage mapImage;
 
     public TileManager(GamePanel gp) {
@@ -52,6 +55,9 @@ public class TileManager {
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(new File("res/tiles/water.png"));
+
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(new File("res/tiles/grass5.png"));
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -113,6 +119,10 @@ public class TileManager {
                 g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
                 Water water = new Water(x, y, tile[tileNum].image);
                 waters.add(water);
+            } else if(tileNum == 3) {
+                g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
+                Grass grass = new Grass(x, y, tile[tileNum].image);
+                grasses.add(grass);
             } else {
                 g2.drawImage(tile[tileNum].image, x, y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
             }
@@ -140,5 +150,9 @@ public class TileManager {
 
     public ArrayList<Water> getWaters() {
         return waters;
+    }
+
+    public ArrayList<Grass> getGrasses() {
+        return grasses;
     }
 }

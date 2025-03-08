@@ -4,11 +4,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import Entities.Bullet;
+import Entities.Grass;
 import Entities.Player;
 import Entities.Wall;
 import Entities.Water;
 import Inputs.KeyBoardsHandle;
 import Tile.TileManager;
+import effect.Boom;
 import graphics.Sprite;
 
 import java.awt.*;
@@ -27,6 +29,9 @@ public class GamePanel extends JPanel {
     private Sprite sprite;                 // Quản lý hình ảnh sprite
     private boolean drawMap = true;
     TileManager tileM = new TileManager(this);
+    private int aniTick = 25;
+    private int aniIndex = 25;
+    private int aniSpeed = 25;
     
     /**
      * Khởi tạo panel game và các thành phần cần thiết
@@ -36,9 +41,9 @@ public class GamePanel extends JPanel {
         sprite = new Sprite();
         
         // Tạo người chơi với các thông số và nhãn
-        player_1 = new Player(GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, 2, 32, Color.BLUE, "P1", sprite);
-        player_2 = new Player(GameConstants.GAME_SCREEN_WIDTH-GameConstants.TILE_SIZE*3, GameConstants.GAME_SCREEN_HEIGHT-GameConstants.TILE_SIZE*3-GameConstants.TILE_SIZE/2, 1, 32, Color.RED, "P2", sprite);
-        
+        player_1 = new Player(GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, 32, Color.BLUE, "P1", sprite);
+        player_2 = new Player(GameConstants.GAME_SCREEN_WIDTH-GameConstants.TILE_SIZE*3, GameConstants.GAME_SCREEN_HEIGHT-GameConstants.TILE_SIZE*3-GameConstants.TILE_SIZE/2, 32, Color.RED, "P2", sprite);
+
         // Thiết lập xử lý đầu vào
         keyBoardsHandle = new KeyBoardsHandle(this);
         addKeyListener(keyBoardsHandle);
@@ -73,7 +78,7 @@ public class GamePanel extends JPanel {
         // Kiểm tra va chạm
         checkCollisions();
     }
-    
+
     /**
      * Xử lý logic bắn đạn cho cả hai người chơi
      */
@@ -91,6 +96,9 @@ public class GamePanel extends JPanel {
     private void checkCollisions() {
         checkBulletPlayerCollisions();
 
+        checkPlayerGrassCollision(player_1);
+        checkPlayerGrassCollision(player_2);
+
         checkBulletWallCollision(player_1);
         checkBulletWallCollision(player_2);
 
@@ -103,6 +111,19 @@ public class GamePanel extends JPanel {
         checkTwoPlayerCollision(player_2, player_1);
     }
 
+    private void checkPlayerGrassCollision(Player player) {
+        Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
+    
+        for (Grass grass : new ArrayList<>(tileM.getGrasses())) {
+            if (playerBounds.intersects(grass.getHitBox())) {
+                player.setHidden(true);
+                break;
+            } else {
+                player.setHidden(false);
+            }
+        }
+    }
+
     private void checkPlayerWaterCollision(Player player) {
         Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
     
@@ -111,7 +132,7 @@ public class GamePanel extends JPanel {
                 player.setSpeed(1);
                 break;
             } else {
-                player.setSpeed(2);
+                player.setSpeed(4);
             }
         }
     }
@@ -155,10 +176,10 @@ public class GamePanel extends JPanel {
      */
     private void updateHealth(Player p1){
         p1.setHealth(p1.getHealth() - Bullet.DAME);
-                p1.checkDead();
-                if (!p1.getIsDead()){
+            p1.checkDead();
+            if (!p1.getIsDead()){
                     
-                }
+            }
     }
     private void checkBulletPlayerCollisions() {
         // Kiểm tra đạn của người chơi 1 có trúng người chơi 2 không
@@ -213,7 +234,7 @@ public class GamePanel extends JPanel {
             player_2.move();
         }
     }
-    
+
     /**
      * Vẽ tất cả các thành phần game
      * Được gọi tự động bởi Swing khi repaint()
@@ -221,7 +242,6 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         // if(drawMap == true) {
         //     System.out.println(1);
         tileM.draw(g);

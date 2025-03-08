@@ -16,7 +16,7 @@ import graphics.Sprite;
  */
 public class Player {
     private int x, y;                      // Vị trí của người chơi
-    private int speed;                     // Tốc độ di chuyển
+    private int speed = 4;                     // Tốc độ di chuyển
     private int size;                      // Kích thước hình vuông người chơi
     private int moveDirection = -1;        // Hướng di chuyển (-1: không di chuyển)
     private int facingDirection = 3;       // Hướng nhìn (mặc định: phải)
@@ -33,6 +33,8 @@ public class Player {
     private int health ;
     private int maxHealth = 100;
     private boolean isDead = false;
+    private boolean isPlayerControlled;
+    private boolean isHidden;
     /**
      * Khởi tạo người chơi
      * @param x Tọa độ X ban đầu
@@ -43,7 +45,7 @@ public class Player {
      * @param label Nhãn hiển thị (P1/P2)
      * @param sprite Đối tượng Sprite để lấy hình ảnh
      */
-    public Player(int x, int y, int speed, int size, Color color, String label, Sprite sprite) {
+    public Player(int x, int y, int size, Color color, String label, Sprite sprite) {
         this.x = x;
         this.y = y;
 
@@ -54,7 +56,7 @@ public class Player {
         this.bullets = new ArrayList<>();
         this.lastShootTime = 0;
         this.sprite = sprite;
-        
+
         // Xác định xe tăng là màu xanh hay đỏ dựa theo label
         this.isBlue = label.equals("P1");
         this.health = maxHealth;
@@ -106,11 +108,15 @@ public class Player {
      */
     public void move() {
         // Chỉ di chuyển nếu có hướng di chuyển
-        if (moveDirection == -1) return;
+        if (moveDirection == -1) {
+            isPlayerControlled = false;
+            return;
+        } 
         if (moveDirection == 10) {health = maxHealth; return;}
         previousX = x;
         previousY = y;
 
+        isPlayerControlled = true;
         // Tăng tốc độ di chuyển để mượt hơn
         int actualSpeed = speed;
 
@@ -242,33 +248,27 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
-        if (color == Color.BLUE)
-        {g.fillRect(0, 0, health, 10);}
-        else {
-            g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
+        // g.setColor(Color.RED);
+        // if (color == Color.BLUE)
+        // {g.fillRect(0, 0, health, 10);}
+        // else {
+        //     g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
+        // }
+        if(!isHidden) {
+            if (sprite != null) {
+                // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
+                BufferedImage tankImg = sprite.getTank(isBlue);
+                BufferedImage rotatedTank = sprite.rotateImage(tankImg, facingDirection);
+                
+                // Vẽ xe tăng
+                g.drawImage(rotatedTank, x, y, size, size, null);
+            } 
         }
-        if (sprite != null) {
-            // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
-            BufferedImage tankImg = sprite.getTank(isBlue);
-            BufferedImage rotatedTank = sprite.rotateImage(tankImg, facingDirection);
-            
-            // Vẽ xe tăng
-            g.drawImage(rotatedTank, x, y, size, size, null);
-        } 
-
+        
     }
-    
-    /**
-     * Lấy tọa độ X
-     */
     public int getX() {
         return x;
     }
-    
-    /**
-     * Lấy tọa độ Y
-     */
     public int getY() {
         return y;
     }
@@ -276,18 +276,15 @@ public class Player {
     public int getSpeed() {
         return speed;
     }
-    
-    /**
-     * Lấy kích thước
-     */
     public int getSize() {
         return size;
     }
-
+    public boolean setHidden(boolean isHidden){
+        return this.isHidden = isHidden;
+    }
     public Rectangle getBounds() {
         return new Rectangle(x,y,size-5,size-5);
     }
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }

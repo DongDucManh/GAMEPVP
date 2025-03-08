@@ -13,7 +13,7 @@ import graphics.Sprite;
  * Quản lý vị trí, di chuyển và vẽ đạn
  */
 public class Bullet {
-    private int speed = 2;           // Tốc độ di chuyển đạn
+    private int speed = 20;           // Tốc độ di chuyển đạn
     private int x, y;                 // Vị trí 
     public static final int DAME = 20;
     private int width = 8, height = 8; // Kích thước đạn

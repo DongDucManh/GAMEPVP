@@ -4,6 +4,8 @@ package graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -20,6 +22,7 @@ public class Sprite {
     private BufferedImage blueTank;
     private BufferedImage redTank;
     private BufferedImage bullet;
+    private ArrayList<BufferedImage> booms;
     
     /**
      * Khởi tạo và tải tất cả các hình ảnh
@@ -29,7 +32,7 @@ public class Sprite {
         blueTank = createDefaultTank(0x3333FF);
         redTank = createDefaultTank(0xFF3333);
         bullet = createDefaultBullet();
-        
+        booms = new ArrayList<>();
         // Sau đó thử tải hình ảnh từ file
         tryLoadImages();
     }
@@ -50,7 +53,9 @@ public class Sprite {
             blueTank = ImageIO.read(new File("res/player/BlueTank.png"));
             redTank = ImageIO.read(new File("res/player/redTank.png"));
             bullet = ImageIO.read(new File("res/player/bullet.png"));
-
+            for(int i=1; i<=15; i++) {
+                booms.add(ImageIO.read(new File("res/effects/boom/" + i + ".png")));
+            }
             // BufferedImage loadedBlue = loadImage("BlueTank.png");
             // if (loadedBlue != null) blueTank = loadedBlue;
             
@@ -216,5 +221,8 @@ public class Sprite {
         return newImage;
     }
 
+    public ArrayList<BufferedImage> getBooms() {
+        return booms;
+    }
     
 }
