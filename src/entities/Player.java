@@ -18,7 +18,10 @@ public class Player {
     private int x, y;                      // Vị trí của người chơi
     private int speed = 4;                     // Tốc độ di chuyển
     private int size;                      // Kích thước hình vuông người chơi
-    private int moveDirection = -1;        // Hướng di chuyển (-1: không di chuyển)
+    private int moveDirection = -1;        // Hướng di chuyển (-1: không di chuyển, 0: tiến, 1: lùi)
+    private int rotationDirection = -1;    // Hướng xoay (-1: không xoay, 0: xoay trái, 1: xoay phải)
+    private double angle = 0;              // Góc xoay (độ)
+    private double rotationSpeed = 3;      // Tốc độ xoay (độ mỗi khung hình)
     private int facingDirection = 3;       // Hướng nhìn (mặc định: phải)
     private Color color;                   // Màu sắc người chơi
     // private String label;                  // Nhãn hiển thị (P1/P2)
@@ -65,11 +68,20 @@ public class Player {
 
     /**
      * Đặt hướng di chuyển hiện tại
-     * @param direction Hướng di chuyển (0:lên, 1:xuống, 2:trái, 3:phải, -1:không di chuyển)
+     * @param direction Hướng di chuyển (0:tiến, 1:lùi, -1:không di chuyển, 10:hồi máu)
      */
     public void setMoveDirection(int direction) {
         this.moveDirection = direction;
     }
+    
+    /**
+     * Đặt hướng xoay
+     * @param direction Hướng xoay (0:xoay trái, 1:xoay phải, -1:không xoay)
+     */
+    public void setRotationDirection(int direction) {
+        this.rotationDirection = direction;
+    }
+    
     public void setHealth(int health){
         this.health = health;
     }
@@ -85,13 +97,24 @@ public class Player {
         return !isDead;
     }
     /**
-     * Cập nhật hướng nhìn dựa trên hướng di chuyển
-     * @param lockDirection True nếu hướng nhìn bị khóa (không thay đổi)
+     * Cập nhật hướng nhìn dựa trên góc xoay
      */
     public void updateFacingDirection(boolean lockDirection) {
-        // Chỉ cập nhật hướng nhìn nếu không bị khóa và đang di chuyển
-        if (!lockDirection && moveDirection != -1) {
-            facingDirection = moveDirection;
+        // Chuyển đổi góc thành hướng nhìn (0-3)
+        if (!lockDirection) {
+            // Từ góc tính hướng nhìn (0: lên, 1: xuống, 2: trái, 3: phải)
+            double normalizedAngle = angle % 360;
+            if (normalizedAngle < 0) normalizedAngle += 360;
+            
+            if ((normalizedAngle >= 315 && normalizedAngle <= 360) || (normalizedAngle >= 0 && normalizedAngle < 45)) {
+                facingDirection = 3; // Phải
+            } else if (normalizedAngle >= 45 && normalizedAngle < 135) {
+                facingDirection = 1; // Xuống
+            } else if (normalizedAngle >= 135 && normalizedAngle < 225) {
+                facingDirection = 2; // Trái
+            } else {
+                facingDirection = 0; // Lên
+            }
         }
     }
     
@@ -107,43 +130,51 @@ public class Player {
      * Di chuyển người chơi dựa trên hướng và tốc độ hiện tại
      */
     public void move() {
-        // Chỉ di chuyển nếu có hướng di chuyển
+        // Xử lý xoay xe tăng
+        if (rotationDirection == 0) { // Xoay trái
+            angle -= rotationSpeed;
+        } else if (rotationDirection == 1) { // Xoay phải
+            angle += rotationSpeed;
+        }
+        
+        // Giữ góc trong khoảng [0, 360)
+        angle = angle % 360;
+        if (angle < 0) angle += 360;
+        
+        // Cập nhật hướng nhìn dựa trên góc
+        updateFacingDirection(false);
+        
+        // Lưu vị trí trước khi di chuyển
+        previousX = x;
+        previousY = y;
+        
+        // Xử lý di chuyển đặc biệt (hồi máu)
+        if (moveDirection == 10) {
+            health = maxHealth; 
+            return;
+        }
+        
+        // Chỉ di chuyển khi có hướng di chuyển
         if (moveDirection == -1) {
             isPlayerControlled = false;
             return;
-        } 
-        if (moveDirection == 10) {health = maxHealth; return;}
-        previousX = x;
-        previousY = y;
-
-        isPlayerControlled = true;
-        // Tăng tốc độ di chuyển để mượt hơn
-        int actualSpeed = speed;
-
-        // Di chuyển theo hướng
-        switch (moveDirection) {
-            case 0: // Lên
-                y -= actualSpeed;
-                break;
-            case 1: // Xuống
-                if (y + actualSpeed > GameConstants.GAME_SCREEN_HEIGHT) {
-                    y += (y + actualSpeed) - GameConstants.GAME_SCREEN_HEIGHT;
-                } else {
-                    y += actualSpeed;
-                }
-                break;
-            case 2: // Trái
-                x -= actualSpeed;
-                break;
-            case 3: // Phải
-                if (x + actualSpeed > GameConstants.GAME_SCREEN_WIDTH) {
-                    x += (x + actualSpeed) - GameConstants.GAME_SCREEN_WIDTH;
-                } else {
-                    x += actualSpeed;
-                }
-                break;
         }
-
+        
+        isPlayerControlled = true;
+        
+        // Tính toán hướng di chuyển dựa trên góc và hướng tiến/lùi
+        double radians = Math.toRadians(angle);
+        int actualSpeed = speed;
+        
+        // Tính toán di chuyển dựa trên góc và hướng di chuyển
+        if (moveDirection == 0) { // Tiến
+            x += (int)(Math.cos(radians) * actualSpeed);
+            y += (int)(Math.sin(radians) * actualSpeed);
+        } else if (moveDirection == 1) { // Lùi
+            x -= (int)(Math.cos(radians) * actualSpeed);
+            y -= (int)(Math.sin(radians) * actualSpeed);
+        }
+        
         // Kiểm tra và giới hạn trong màn hình
         if (x < 0)
             x = 0;
@@ -153,7 +184,9 @@ public class Player {
             x = GameConstants.GAME_SCREEN_WIDTH - size - size/2 + 4;
         if (y > GameConstants.GAME_SCREEN_HEIGHT - size - size -1)
             y = GameConstants.GAME_SCREEN_HEIGHT - size - size -1;
-
+        
+        // Cập nhật vị trí hitbox
+        hitBox.setLocation(x, y);
     }
 
     public void undoMove() {
@@ -173,38 +206,17 @@ public class Player {
             return;
         }
         
-        // Tạo đạn mới dựa trên hướng nhìn (không phải hướng di chuyển)
-        int bulletX = x;
-        int bulletY = y;
+        // Tính toán vị trí bắt đầu của đạn
+        double radians = Math.toRadians(angle);
+        int bulletX = x + size/2 - 4;
+        int bulletY = y + size/2 - 4;
         
-        // Điều chỉnh vị trí bắt đầu của đạn dựa trên hướng nhìn của người chơi
-        switch (facingDirection) {
-            case 0: // Lên
-                bulletX += size / 2 - 4;
-                bulletY -= 16;
-                break;
-            case 1: // Xuống
-                bulletX += size / 2 -  4;
-                bulletY += size;
-                break;
-            case 2: // Trái
-                bulletX -= 16;
-                bulletY += size / 2  -4;
-                break;
-            case 3: // Phải
-                bulletX += size;
-                bulletY += size / 2  - 4;
-                break;
-            default:
-                // Nếu không có hướng, mặc định bắn sang phải
-                bulletX += size;
-                bulletY += size / 2  - 4;
-                facingDirection = 3;
-                break;
-        }
+        // Đặt đạn ở đầu nòng súng
+        bulletX += (int)(Math.cos(radians) * size/2);
+        bulletY += (int)(Math.sin(radians) * size/2);
         
-        // Tạo đạn và đặt thời gian hồi chiêu
-        bullets.add(new Bullet(bulletX, bulletY, facingDirection, color, sprite));
+        // Tạo đạn với góc hiện tại của xe tăng
+        bullets.add(new Bullet(bulletX, bulletY, angle, color, sprite));
         lastShootTime = currentTime;
     }
     
@@ -248,24 +260,20 @@ public class Player {
      * @param g Đối tượng đồ họa để vẽ
      */
     public void draw(Graphics g) {
-        // g.setColor(Color.RED);
-        // if (color == Color.BLUE)
-        // {g.fillRect(0, 0, health, 10);}
-        // else {
-        //     g.fillRect(GameConstants.GAME_SCREEN_WIDTH-maxHealth, 0, health, 10);
-        // }
         if(!isHidden) {
             if (sprite != null) {
-                // Lấy hình ảnh xe tăng và xoay theo hướng nhìn
+                // Lấy hình ảnh xe tăng
                 BufferedImage tankImg = sprite.getTank(isBlue);
-                BufferedImage rotatedTank = sprite.rotateImage(tankImg, facingDirection);
+                
+                // Xoay hình ảnh theo góc
+                BufferedImage rotatedTank = sprite.rotateImageByAngle(tankImg, angle);
                 
                 // Vẽ xe tăng
                 g.drawImage(rotatedTank, x, y, size, size, null);
-            } 
+            }
         }
-        
     }
+    
     public int getX() {
         return x;
     }

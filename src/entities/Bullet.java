@@ -18,29 +18,28 @@ public class Bullet {
     public static final int DAME = 20;
     private int width = 8, height = 8; // Kích thước đạn
     private boolean active = true;    // Trạng thái hoạt động
-    private int direction;            // Hướng di chuyển
+    private double angle;             // Góc di chuyển (độ)
     private Color color;              // Màu sắc (theo người chơi)
     private Sprite sprite;            // Tham chiếu đến đối tượng Sprite
     private BufferedImage bulletImage; // Hình ảnh đạn đã xoay theo hướng
     
     /**
-     * Khởi tạo đạn
+     * Khởi tạo đạn với góc cụ thể
      * @param x Tọa độ X ban đầu
      * @param y Tọa độ Y ban đầu
-     * @param direction Hướng di chuyển (0:lên, 1:xuống, 2:trái, 3:phải)
+     * @param angle Góc di chuyển (độ)
      * @param color Màu sắc đạn
      * @param sprite Đối tượng Sprite để lấy hình ảnh
      */
-    public Bullet(int x, int y, int direction, Color color, Sprite sprite) {
+    public Bullet(int x, int y, double angle, Color color, Sprite sprite) {
         this.x = x;
         this.y = y;
-        this.direction = direction;
+        this.angle = angle;
         this.color = color;
         this.sprite = sprite;
-        // Lấy và xoay hình ảnh đạn theo hướng
-        this.bulletImage = sprite.rotateImage(sprite.getBullet(), direction);
-
         
+        // Xoay hình ảnh đạn theo góc
+        this.bulletImage = sprite.rotateImageByAngle(sprite.getBullet(), angle);
     }
     
     /**
@@ -49,21 +48,10 @@ public class Bullet {
     public void update() {
         if (!active) return;  // Không cập nhật nếu đạn không còn hoạt động
         
-        // Di chuyển đạn theo hướng
-        switch (direction) {
-            case 0: // Lên
-                y -= speed;
-                break;
-            case 1: // Xuống
-                y += speed;
-                break;
-            case 2: // Trái
-                x -= speed;
-                break;
-            case 3: // Phải
-                x += speed;
-                break;
-        }
+        // Tính toán di chuyển dựa trên góc
+        double radians = Math.toRadians(angle);
+        x += (int)(Math.cos(radians) * speed);
+        y += (int)(Math.sin(radians) * speed);
         
         // Kiểm tra nếu đạn đi ra ngoài màn hình
         if (x < 0 || x > GameConstants.GAME_SCREEN_WIDTH || y < 0 || y > GameConstants.GAME_SCREEN_HEIGHT) {
@@ -84,7 +72,7 @@ public class Bullet {
         } else {
             // Vẽ đạn đơn giản nếu không có hình ảnh
             g.setColor(color);
-            if (direction == 0 || direction == 1) { // Đạn dọc (lên/xuống)
+            if (angle == 270 || angle == 90) { // Đạn dọc (lên/xuống)
                 g.fillRect(x, y, 5, 10);
             } else { // Đạn ngang (trái/phải)
                 g.fillRect(x, y, 10, 5);

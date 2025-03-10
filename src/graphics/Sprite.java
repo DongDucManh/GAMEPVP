@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.RenderingHints;
 
 /**
  * Sprite - Lớp quản lý các hình ảnh trong game
@@ -219,6 +220,40 @@ public class Sprite {
         g.dispose();
         
         return newImage;
+    }
+
+    /**
+     * Xoay hình ảnh theo một góc cụ thể (đơn vị độ) mà không thay đổi kích thước
+     * @param image Hình ảnh cần xoay
+     * @param degrees Góc xoay (đơn vị độ)
+     * @return Hình ảnh đã xoay với kích thước giữ nguyên
+     */
+    public BufferedImage rotateImageByAngle(BufferedImage image, double degrees) {
+        if (image == null) return null;
+        
+        int width = image.getWidth();
+        int height = image.getHeight();
+        
+        // Tạo hình ảnh mới với kích thước giống hình gốc
+        BufferedImage rotated = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = rotated.createGraphics();
+        
+        // Thiết lập chất lượng rendering cao hơn
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        
+        // Tính toán phép biến đổi để xoay quanh tâm hình ảnh
+        AffineTransform transform = new AffineTransform();
+        transform.translate(width/2, height/2);
+        transform.rotate(Math.toRadians(degrees));
+        transform.translate(-width/2, -height/2);
+        
+        // Áp dụng phép biến đổi và vẽ hình ảnh
+        g2d.setTransform(transform);
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        
+        return rotated;
     }
 
     public ArrayList<BufferedImage> getBooms() {

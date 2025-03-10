@@ -13,6 +13,8 @@ public class KeyBoardsHandle implements KeyListener {
     private GamePanel gamePanel; // Tham chiếu đến game panel
     private int directionP1; // Hướng di chuyển của người chơi 1
     private int directionP2; // Hướng di chuyển của người chơi 2
+    private int rotationP1; // Hướng xoay của người chơi 1
+    private int rotationP2; // Hướng xoay của người chơi 2
 
     // Theo dõi trạng thái của các phím được nhấn
     private boolean upP1, downP1, leftP1, rightP1, actionP1, shootP1;
@@ -33,6 +35,8 @@ public class KeyBoardsHandle implements KeyListener {
         // Khởi tạo không có hướng di chuyển
         directionP1 = -1;
         directionP2 = -1;
+        rotationP1 = -1;
+        rotationP2 = -1;
     }
 
     /**
@@ -59,6 +63,24 @@ public class KeyBoardsHandle implements KeyListener {
      */
     public int getDirectionP2() {
         return directionP2;
+    }
+
+    /**
+     * Lấy hướng xoay của người chơi 1
+     * 
+     * @return Hướng xoay của người chơi 1
+     */
+    public int getRotationP1() {
+        return rotationP1;
+    }
+
+    /**
+     * Lấy hướng xoay của người chơi 2
+     * 
+     * @return Hướng xoay của người chơi 2
+     */
+    public int getRotationP2() {
+        return rotationP2;
     }
 
     /**
@@ -98,37 +120,44 @@ public class KeyBoardsHandle implements KeyListener {
     }
 
     /**
-     * Cập nhật hướng di chuyển của người chơi
+     * Cập nhật hướng di chuyển và xoay của người chơi
      */
     public void updateDirections() {
-        // Logic hướng di chuyển người chơi 1 (ưu tiên phím được nhấn cuối cùng)
+        // Người chơi 1: W/S để tiến/lùi, A/D để xoay trái/phải
         if (upP1)
-            directionP1 = 0;
-        if (downP1)
-            directionP1 = 1;
+            directionP1 = 0;  // Tiến
+        else if (downP1)
+            directionP1 = 1;  // Lùi
+        else
+            directionP1 = -1; // Không di chuyển
+
         if (leftP1)
-            directionP1 = 2;
-        if (rightP1)
-            directionP1 = 3;
+            rotationP1 = 0;   // Xoay trái
+        else if (rightP1)
+            rotationP1 = 1;   // Xoay phải
+        else
+            rotationP1 = -1;  // Không xoay
+            
         if (actionP1)
-            directionP1 = 5;
-        if (!upP1 && !downP1 && !leftP1 && !rightP1 && !actionP1)
-            directionP1 = -1;
-
-        // Logic hướng di chuyển người chơi 2
+            directionP1 = 5;  // Hành động đặc biệt
+            
+        // Người chơi 2: Up/Down để tiến/lùi, Left/Right để xoay trái/phải
         if (upP2)
-            directionP2 = 0;
-        if (downP2)
-            directionP2 = 1;
-        if (leftP2)
-            directionP2 = 2;
-        if (rightP2)
-            directionP2 = 3;
-        if (revice)
-            directionP2 = 10;
-        if (!upP2 && !downP2 && !leftP2 && !rightP2)
-            directionP2 = -1;
+            directionP2 = 0;  // Tiến
+        else if (downP2)
+            directionP2 = 1;  // Lùi
+        else
+            directionP2 = -1; // Không di chuyển
 
+        if (leftP2)
+            rotationP2 = 0;   // Xoay trái
+        else if (rightP2)
+            rotationP2 = 1;   // Xoay phải
+        else
+            rotationP2 = -1;  // Không xoay
+            
+        if (revice)
+            directionP2 = 10; // Hồi máu
     }
 
     /**

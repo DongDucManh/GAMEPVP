@@ -84,7 +84,7 @@ public class GamePanel extends JPanel {
             player_1.shoot();
         }
         
-        // Người chơi 2 bắn
+        // Người chơi 2 bắ
         if (keyBoardsHandle.isShootingP2()) {
             player_2.shoot();
         }
@@ -122,14 +122,21 @@ public class GamePanel extends JPanel {
 
     private void checkPlayerWaterCollision(Player player) {
         Rectangle playerBounds = new Rectangle(player.getX(), player.getY(), player.getSize(), player.getSize());
-    
+        boolean inWater = false;
+        
+        // Check if player is in any water tile
         for (Water water : new ArrayList<>(tileM.getWaters())) {
             if (playerBounds.intersects(water.getHitBox())) {
-                player.setSpeed(1);
+                inWater = true;
                 break;
-            } else {
-                player.setSpeed(4);
             }
+        }
+        
+        // Set speed based on water status, ensuring minimum movement speed in water
+        if (inWater) {
+            player.setSpeed(2);  // Increased from 1 to 2 to ensure movement
+        } else {
+            player.setSpeed(4);  // Normal speed outside water
         }
     }
 
@@ -214,18 +221,16 @@ public class GamePanel extends JPanel {
      */
     public void setMoving(int p) {
         if (p == 1) {
-            // Cập nhật hướng di chuyển
+            // Cập nhật hướng di chuyển và xoay cho Player 1
             player_1.setMoveDirection(keyBoardsHandle.getDirectionP1());
-            // Chỉ cập nhật hướng nhìn nếu không bị khóa
-            player_1.updateFacingDirection(keyBoardsHandle.isDirectionLockedP1());
+            player_1.setRotationDirection(keyBoardsHandle.getRotationP1());
             // Di chuyển người chơi
             player_1.move();
         }
         if (p == 2) {
-            // Cập nhật hướng di chuyển
+            // Cập nhật hướng di chuyển và xoay cho Player 2
             player_2.setMoveDirection(keyBoardsHandle.getDirectionP2());
-            // Chỉ cập nhật hướng nhìn nếu không bị khóa
-            player_2.updateFacingDirection(keyBoardsHandle.isDirectionLockedP2());
+            player_2.setRotationDirection(keyBoardsHandle.getRotationP2());
             // Di chuyển người chơi
             player_2.move();
         }
