@@ -5,7 +5,7 @@ echo 1. Xoa cac file cu...
 rmdir /s /q bin 2>nul
 del /f /q GamePVP.jar 2>nul
 del /f /q sources.txt 2>nul
-
+    
 echo 2. Tao thu muc bin...
 mkdir bin
 
@@ -21,7 +21,7 @@ if %errorlevel% neq 0 (
 )
 
 echo 5. Tao file JAR...
-jar cfe GamePVP.jar Main -C bin .
+jar cfm GamePVP.jar MANIFEST.MF -C bin .
 
 echo 6. Don dep...
 del /f /q sources.txt

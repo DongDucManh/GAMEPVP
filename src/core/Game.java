@@ -8,8 +8,8 @@ public class Game implements Runnable {
     private GameWindow gameWindow;   
     private GamePanel gamePanel;    
     private Thread gameThread;       
-    private final int FPS_SET = 120; 
-    private final int UPS_SET = 40; 
+    private final int FPS_SET = 150; 
+    private final int UPS_SET = 45; 
     
     public Game() {
         gamePanel = new GamePanel();             
@@ -35,9 +35,6 @@ public class Game implements Runnable {
         double timePerUpdate = 1000000000.0 / UPS_SET;   // Nano giây cho mỗi lần cập nhật
         
         long previousTime = System.nanoTime();  // Thời điểm của vòng lặp trước đó
-        
-        int frames = 0;    // Đếm số khung hình đã vẽ
-        int updates = 0;   // Đếm số lần cập nhật logic
         long lastCheck = System.currentTimeMillis();  // Thời điểm kiểm tra FPS cuối cùng
         
         double deltaU = 0;  // Thời gian tích lũy cho cập nhật
@@ -56,7 +53,7 @@ public class Game implements Runnable {
             if (deltaU >= 1) {
                 // Cập nhật trạng thái game
                 gamePanel.updateGame();
-                updates++;
+              
                 deltaU--;
             }
             
@@ -64,15 +61,13 @@ public class Game implements Runnable {
             if (deltaF >= 1) {
                 // Vẽ lại màn hình game
                 gamePanel.repaint();
-                frames++;
+               
                 deltaF--;
             }
             
             // Hiển thị FPS mỗi giây
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
-                frames = 0;
-                updates = 0;
             }
         }
     }

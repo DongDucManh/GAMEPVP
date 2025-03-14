@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.RenderingHints;
+import java.awt.Color;
 
 /**
  * Sprite - Lớp quản lý các hình ảnh trong game
@@ -241,6 +242,12 @@ public class Sprite {
         // Thiết lập chất lượng rendering cao hơn
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        
+        // Xóa background để tránh vết màu đen ở các góc
+        g2d.setBackground(new Color(0, 0, 0, 0));
+        g2d.clearRect(0, 0, width, height);
         
         // Tính toán phép biến đổi để xoay quanh tâm hình ảnh
         AffineTransform transform = new AffineTransform();

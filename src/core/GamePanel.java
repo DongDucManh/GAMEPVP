@@ -1,18 +1,13 @@
 package core;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import entities.*;
 import inputs.KeyBoardsHandle;
+import sound.SoundEffect;
 import tile.TileManager;
-import effect.Boom;
 import graphics.Sprite;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -23,11 +18,8 @@ public class GamePanel extends JPanel {
     private Player player_1, player_2;     // Hai người chơi trong game
     private KeyBoardsHandle keyBoardsHandle;  // Xử lý đầu vào từ bàn phím
     private Sprite sprite;                 // Quản lý hình ảnh sprite
-    private boolean drawMap = true;
+    private SoundEffect soundEffect;       // Âm thanh trong game
     TileManager tileM = new TileManager(this);
-    private int aniTick = 25;
-    private int aniIndex = 25;
-    private int aniSpeed = 25;
     
     /**
      * Khởi tạo panel game và các thành phần cần thiết
@@ -35,6 +27,7 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         // Khởi tạo sprite
         sprite = new Sprite();
+        soundEffect = new SoundEffect();
         
         // Tạo người chơi với các thông số và nhãn
         player_1 = new Player(GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, GameConstants.TILE_SIZE + GameConstants.TILE_SIZE/2, 32, Color.BLUE, "P1", sprite);
@@ -59,7 +52,6 @@ public class GamePanel extends JPanel {
      */
     public void updateGame() {
         // Xử lý đầu vào và cập nhật trạng thái
-        Graphics2D g;
         // Cập nhật di chuyển người chơi
         setMoving(1);
         setMoving(2);
@@ -195,7 +187,9 @@ public class GamePanel extends JPanel {
             
             if (bulletBound.intersects(player2Bound)) {
                 bullet.deactivate();
+                soundEffect.play();
                 updateHealth(player_2);
+                soundEffect.stop();
             }
         }
         

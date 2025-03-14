@@ -1,7 +1,4 @@
 package main;
-import java.io.File;
-
-import core.Game;
 import menu.StartMenu;
 
 /**
